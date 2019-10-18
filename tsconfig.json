@@ -14,8 +14,11 @@
     "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "strict": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@cars-shop-ui/material": ["libs/material/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

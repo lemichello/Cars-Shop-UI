@@ -21,10 +21,7 @@
             "polyfills": "apps/shop/src/polyfills.ts",
             "tsConfig": "apps/shop/tsconfig.app.json",
             "aot": false,
-            "assets": [
-              "apps/shop/src/favicon.ico",
-              "apps/shop/src/assets"
-            ],
+            "assets": ["apps/shop/src/favicon.ico", "apps/shop/src/assets"],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "apps/shop/src/styles.scss"
@@ -87,10 +84,7 @@
               "apps/shop/tsconfig.app.json",
               "apps/shop/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/shop/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/shop/**"]
           }
         },
         "test": {
@@ -124,14 +118,40 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/shop-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/shop-e2e/**"
-            ]
+            "tsConfig": ["apps/shop-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/shop-e2e/**"]
           }
+        }
+      }
+    },
+    "material": {
+      "projectType": "library",
+      "root": "libs/material",
+      "sourceRoot": "libs/material/src",
+      "prefix": "cars-shop-ui",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/material/tsconfig.lib.json",
+              "libs/material/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/material/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/material/jest.config.js",
+            "tsConfig": "libs/material/tsconfig.spec.json",
+            "setupFile": "libs/material/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
         }
       }
     }
