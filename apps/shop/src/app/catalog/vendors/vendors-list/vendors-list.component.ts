@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Vendor } from '../vendor';
+import { Vendor } from '@cars-shop-ui/core-data';
 
 @Component({
   selector: 'cars-shop-ui-vendors-list',
@@ -7,10 +7,16 @@ import { Vendor } from '../vendor';
   styleUrls: ['./vendors-list.component.scss']
 })
 export class VendorsListComponent implements OnInit {
-  @Input() vendors!: Vendor[];
-  @Input() cols!: number;
+  @Input() vendors: Vendor[];
+  @Input() cols: number;
 
   constructor() {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log(this.vendors);
+  }
+
+  log() {
+    console.log(this.vendors);
+  }
 }

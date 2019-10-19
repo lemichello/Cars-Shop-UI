@@ -5,7 +5,7 @@ import { VendorsComponent } from './vendors/vendors.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'catalog',
     component: CatalogComponent,
     children: [{ path: 'vendors', component: VendorsComponent }]
   }

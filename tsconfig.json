@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cars-shop-ui/material": ["libs/material/src/index.ts"]
+      "@cars-shop-ui/material": ["libs/material/src/index.ts"],
+      "@cars-shop-ui/core-data": ["libs/core-data/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

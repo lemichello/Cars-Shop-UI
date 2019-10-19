@@ -7,6 +7,8 @@ import { MaterialModule } from '@cars-shop-ui/material';
 import { AppRoutingModule } from './app-routing.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CatalogModule } from './catalog/catalog.module';
+import { HttpClientModule } from '@angular/common/http';
+import { CoreDataModule } from '@cars-shop-ui/core-data';
 
 @NgModule({
   declarations: [AppComponent],
@@ -14,9 +16,11 @@ import { CatalogModule } from './catalog/catalog.module';
     BrowserModule,
     BrowserAnimationsModule,
     MaterialModule,
-    AppRoutingModule,
     MatTooltipModule,
-    CatalogModule
+    HttpClientModule,
+    CatalogModule,
+    CoreDataModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -14,6 +14,6 @@ import { VendorsListComponent } from './vendors/vendors-list/vendors-list.compon
     MaterialModule,
     CatalogRoutingModule
   ],
-  exports: [CatalogComponent, VendorsComponent]
+  exports: [CatalogComponent, VendorsComponent, VendorsListComponent]
 })
 export class CatalogModule { }

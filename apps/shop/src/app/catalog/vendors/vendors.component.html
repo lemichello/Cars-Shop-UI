@@ -8,6 +8,6 @@
   ></mat-paginator>
   <cars-shop-ui-vendors-list
     [cols]="pageSize"
-    [vendors]="vendors"
+    [vendors]="vendors | async"
   ></cars-shop-ui-vendors-list>
 </div>
