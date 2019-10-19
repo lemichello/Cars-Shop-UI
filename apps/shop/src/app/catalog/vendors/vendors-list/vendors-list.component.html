@@ -1,0 +1,5 @@
+<mat-grid-list [cols]="cols" rowHeight="80px">
+  <mat-grid-tile *ngFor="let vendor of vendors" colspan="1" rowspan="1">
+    <button mat-button class="but">{{ vendor.Name }}</button>
+  </mat-grid-tile>
+</mat-grid-list>

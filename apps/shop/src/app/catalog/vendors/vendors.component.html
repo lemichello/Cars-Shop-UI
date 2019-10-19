@@ -1,0 +1,13 @@
+<div class="outer-container">
+  <mat-paginator
+    class="outer-container__paginator"
+    [length]="paginationLength"
+    [pageSize]="pageSize"
+    (page)="paginatorChanged($event)"
+    [pageSizeOptions]="pageSizeOptions"
+  ></mat-paginator>
+  <cars-shop-ui-vendors-list
+    [cols]="pageSize"
+    [vendors]="vendors"
+  ></cars-shop-ui-vendors-list>
+</div>
