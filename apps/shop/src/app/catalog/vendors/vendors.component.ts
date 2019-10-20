@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { PageEvent } from '@angular/material/paginator';
-import { VendorsService } from '@cars-shop-ui/core-data';
-import { Observable } from 'rxjs';
+import { Vendor, VendorsService } from '@cars-shop-ui/core-data';
+import { PaginationOutput } from '../paginator/pagination-output';
 
 @Component({
   selector: 'cars-shop-ui-vendors',
@@ -9,18 +8,32 @@ import { Observable } from 'rxjs';
   styleUrls: ['./vendors.component.scss']
 })
 export class VendorsComponent implements OnInit {
-  paginationLength = 100;
-  pageSize = 5;
-  pageSizeOptions: number[] = [1, 2, 3, 4, 5];
+  colsNumber = 5;
+  paginationLength: number;
   vendors;
+  displayVendors: Vendor[];
 
   constructor(private vendorsService: VendorsService) {}
 
   ngOnInit() {
-    this.vendors = this.vendorsService.getAll();
+    this.vendorsService.getAll().subscribe(res => {
+      this.vendors = res;
+      this.paginationLength = this.vendors.length;
+
+      this.paginateVendors({
+        colsNumber: this.colsNumber,
+        pageIndex: 0,
+        pageSize: this.colsNumber * 5
+      });
+    });
   }
 
-  paginatorChanged(event: PageEvent): void {
-    this.pageSize = event.pageSize;
+  paginateVendors(paginationData: PaginationOutput): void {
+    this.colsNumber = paginationData.colsNumber;
+
+    this.displayVendors = this.vendors.slice(
+      paginationData.pageIndex * paginationData.pageSize,
+      paginationData.pageSize * (paginationData.pageIndex + 1)
+    );
   }
 }

@@ -12,11 +12,5 @@ export class VendorsListComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() {
-    console.log(this.vendors);
-  }
-
-  log() {
-    console.log(this.vendors);
-  }
+  ngOnInit() {}
 }

@@ -1,0 +1,13 @@
+.cols-modifier {
+  display: flex;
+  align-items: center;
+
+  &__indicator {
+    font-size: 1.2rem;
+    margin-right: 10px;
+  }
+}
+
+.paginator {
+  background-color: transparent;
+}

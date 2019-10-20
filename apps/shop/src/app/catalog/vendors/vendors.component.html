@@ -1,13 +1,12 @@
 <div class="outer-container">
-  <mat-paginator
-    class="outer-container__paginator"
-    [length]="paginationLength"
-    [pageSize]="pageSize"
-    (page)="paginatorChanged($event)"
-    [pageSizeOptions]="pageSizeOptions"
-  ></mat-paginator>
+  <div class="config-panel">
+    <cars-shop-ui-paginator
+      [paginationLength]="paginationLength"
+      (paginated)="paginateVendors($event)"
+    ></cars-shop-ui-paginator>
+  </div>
   <cars-shop-ui-vendors-list
-    [cols]="pageSize"
-    [vendors]="vendors | async"
+    [cols]="colsNumber"
+    [vendors]="displayVendors"
   ></cars-shop-ui-vendors-list>
 </div>

@@ -1,12 +1,25 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav mode="side" opened class="sidenav">
-    <h4>Filters</h4>
+  <mat-sidenav mode="side" #sidenav opened class="sidenav">
+    <div class="filters-container">
+      <h2>Filters</h2>
+    </div>
   </mat-sidenav>
   <div>
+    <button
+      mat-mini-fab
+      matTooltip="Show filters"
+      class="filters-btn"
+      (click)="sidenav.toggle()"
+    >
+      <mat-icon>filter_list</mat-icon>
+    </button>
     <div class="navigation-buttons">
-      <button mat-stroked-button color="primary" routerLink="vendors">
-        All Vendors
-      </button>
+      <mat-chip-list>
+        <mat-chip color="primary" routerLink="vendors" selected
+          >All Vendors</mat-chip
+        >
+        <mat-chip color="primary" routerLink="cars" selected>All Cars</mat-chip>
+      </mat-chip-list>
     </div>
     <router-outlet></router-outlet>
   </div>

@@ -1,11 +1,11 @@
 <cars-shop-ui-loader></cars-shop-ui-loader>
 <mat-toolbar color="primary" class="toolbar">
-  Cars Shop
+  <a routerLink="catalog" class="brand-link">Cars Shop</a>
   <span class="spacer"></span>
   <button mat-mini-fab matTooltip="Add new Car">
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
-<div class="main-content">
+<div>
   <router-outlet></router-outlet>
 </div>

@@ -6,6 +6,20 @@
   min-width: 200px;
 }
 
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filters-btn {
+  margin: 10px;
+}
+
 .navigation-buttons {
   margin: 10px;
+
+  button {
+    margin-right: 15px;
+  }
 }

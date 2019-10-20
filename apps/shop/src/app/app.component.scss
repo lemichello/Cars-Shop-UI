@@ -4,10 +4,20 @@
   }
 }
 
-.main-content {
-  margin: 15px;
-}
-
 .spacer {
   flex: 1 1 auto;
+}
+
+.brand-link {
+  text-decoration: none;
+  outline: none;
+  color: #ffffff;
+  -webkit-transition: color .4s;
+  -moz-transition: color .4s;
+  -o-transition: color .4s;
+  transition: color .4s;
+}
+
+.brand-link:hover {
+  color: #d3d3d3;
 }

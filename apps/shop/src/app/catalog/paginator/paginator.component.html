@@ -1,0 +1,21 @@
+<div class="cols-modifier">
+  <p class="cols-modifier__indicator">Columns: {{ colsNumber }}</p>
+  <button
+    mat-icon-button
+    color="warn"
+    [disabled]="colsNumber == 1"
+    (click)="decreaseColumns()"
+  >
+    <mat-icon>remove_circle</mat-icon>
+  </button>
+  <button mat-icon-button color="warn" (click)="increaseColumns()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+  <mat-paginator
+    class="paginator"
+    [length]="paginationLength"
+    [pageSize]="pageSize"
+    (page)="paginatorChanged($event)"
+    [pageSizeOptions]="pageSizeOptions"
+  ></mat-paginator>
+</div>
