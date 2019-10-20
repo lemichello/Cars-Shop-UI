@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Vendor } from '@cars-shop-ui/core-data';
 
 @Component({
@@ -9,6 +9,7 @@ import { Vendor } from '@cars-shop-ui/core-data';
 export class VendorsListComponent implements OnInit {
   @Input() vendors: Vendor[];
   @Input() cols: number;
+  @Output() selectedVendor = new EventEmitter();
 
   constructor() {}
 

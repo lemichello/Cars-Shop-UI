@@ -7,14 +7,19 @@ import { MaterialModule } from '@cars-shop-ui/material';
 import { VendorsComponent } from './vendors/vendors.component';
 import { VendorsListComponent } from './vendors/vendors-list/vendors-list.component';
 import { PaginatorComponent } from './paginator/paginator.component';
+import { ModelsComponent } from './models/models.component';
+import { ModelsListComponent } from './models/models-list/models-list.component';
 
 @NgModule({
-  declarations: [CatalogComponent, VendorsComponent, VendorsListComponent, PaginatorComponent],
-  imports: [
-    CommonModule,
-    MaterialModule,
-    CatalogRoutingModule
+  declarations: [
+    CatalogComponent,
+    VendorsComponent,
+    VendorsListComponent,
+    PaginatorComponent,
+    ModelsComponent,
+    ModelsListComponent
   ],
+  imports: [CommonModule, MaterialModule, CatalogRoutingModule],
   exports: [CatalogComponent, VendorsComponent, VendorsListComponent]
 })
-export class CatalogModule { }
+export class CatalogModule {}

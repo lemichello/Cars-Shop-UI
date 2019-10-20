@@ -9,29 +9,31 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class PaginatorComponent implements OnInit {
   @Input() paginationLength: number;
+  @Input() colsNumber: number;
   @Output() paginated = new EventEmitter();
-  colsNumber = 5;
-  pageSize = this.colsNumber * 5;
+  pageSize: number;
+  pageSizeOptions: number[];
   pageIndex = 0;
-  pageSizeOptions: number[] = [
-    this.pageSize,
-    this.pageSize + 5,
-    this.pageSize + 10,
-    this.pageSize + 15
-  ];
 
   constructor() {}
 
-  ngOnInit() {}
-
-  calculatePageSize(): void {
+  ngOnInit() {
     this.pageSize = this.colsNumber * 5;
+    this.refreshPageSizeOptions();
+  }
+
+  refreshPageSizeOptions(): void {
     this.pageSizeOptions = [
       this.pageSize,
       this.pageSize + 5,
       this.pageSize + 10,
       this.pageSize + 15
     ];
+  }
+
+  calculatePageSize(): void {
+    this.pageSize = this.colsNumber * 5;
+    this.refreshPageSizeOptions();
   }
 
   getOutput(): PaginationOutput {

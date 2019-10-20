@@ -3,12 +3,11 @@
     <cars-shop-ui-paginator
       [paginationLength]="paginationLength"
       [colsNumber]="colsNumber"
-      (paginated)="paginateVendors($event)"
+      (paginated)="paginateModels($event)"
     ></cars-shop-ui-paginator>
   </div>
-  <cars-shop-ui-vendors-list
+  <cars-shop-ui-models-list
     [cols]="colsNumber"
-    [vendors]="displayVendors"
-    (selectedVendor)="navigateToModel($event)"
-  ></cars-shop-ui-vendors-list>
+    [models]="displayModels"
+  ></cars-shop-ui-models-list>
 </div>

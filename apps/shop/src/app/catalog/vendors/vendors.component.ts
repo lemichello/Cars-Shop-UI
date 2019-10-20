@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Vendor, VendorsService } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cars-shop-ui-vendors',
@@ -13,7 +14,7 @@ export class VendorsComponent implements OnInit {
   vendors;
   displayVendors: Vendor[];
 
-  constructor(private vendorsService: VendorsService) {}
+  constructor(private vendorsService: VendorsService, private router: Router) {}
 
   ngOnInit() {
     this.vendorsService.getAll().subscribe(res => {
@@ -35,5 +36,9 @@ export class VendorsComponent implements OnInit {
       paginationData.pageIndex * paginationData.pageSize,
       paginationData.pageSize * (paginationData.pageIndex + 1)
     );
+  }
+
+  navigateToModel(vendorId: number): void {
+    this.router.navigate(['catalog/models', vendorId]);
   }
 }

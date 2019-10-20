@@ -1,0 +1,5 @@
+<mat-grid-list [cols]="cols" rowHeight="80px">
+  <mat-grid-tile *ngFor="let model of models" colspan="1" rowspan="1">
+    <button mat-button class="grid-tile">{{ model.name }}</button>
+  </mat-grid-tile>
+</mat-grid-list>

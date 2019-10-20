@@ -6,10 +6,12 @@ import { AppSettings } from '../app-settings';
 @Injectable({
   providedIn: 'root'
 })
-export class VendorsService {
+export class ModelsService {
   constructor(private httpClient: HttpClient) {}
 
-  getAll(): Observable<Object> {
-    return this.httpClient.get(`${AppSettings.BASE_ADDRESS}/vendors`);
+  getByVendor(vendorId: number): Observable<Object> {
+    return this.httpClient.get(
+      `${AppSettings.BASE_ADDRESS}/models/${vendorId}`
+    );
   }
 }
