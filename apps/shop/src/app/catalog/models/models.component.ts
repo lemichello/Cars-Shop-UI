@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Model, ModelsService } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { ActivatedRoute } from '@angular/router';
+import { PaginationService } from '../paginator/pagination.service';
 
 @Component({
   selector: 'cars-shop-ui-models',
@@ -12,7 +13,7 @@ export class ModelsComponent implements OnInit {
   vendorId: number;
   colsNumber = 3;
   paginationLength: number;
-  models;
+  models: any;
   displayModels: Model[];
 
   constructor(
@@ -40,9 +41,9 @@ export class ModelsComponent implements OnInit {
   paginateModels(paginationData: PaginationOutput): void {
     this.colsNumber = paginationData.colsNumber;
 
-    this.displayModels = this.models.slice(
-      paginationData.pageIndex * paginationData.pageSize,
-      paginationData.pageSize * (paginationData.pageIndex + 1)
+    this.displayModels = PaginationService.paginate(
+      paginationData,
+      this.models
     );
   }
 }

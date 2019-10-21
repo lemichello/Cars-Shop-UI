@@ -1,0 +1,13 @@
+<div class="outer-container">
+  <div class="config-panel">
+    <cars-shop-ui-paginator
+      [paginationLength]="paginationLength"
+      [colsNumber]="colsNumber"
+      (paginated)="paginateCars($event)"
+    ></cars-shop-ui-paginator>
+  </div>
+  <cars-shop-ui-cars-list
+    [cols]="colsNumber"
+    [cars]="displayCars"
+  ></cars-shop-ui-cars-list>
+</div>

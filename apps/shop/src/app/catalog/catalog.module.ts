@@ -9,6 +9,8 @@ import { VendorsListComponent } from './vendors/vendors-list/vendors-list.compon
 import { PaginatorComponent } from './paginator/paginator.component';
 import { ModelsComponent } from './models/models.component';
 import { ModelsListComponent } from './models/models-list/models-list.component';
+import { CarsComponent } from './cars/cars.component';
+import { CarsListComponent } from './cars/cars-list/cars-list.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { ModelsListComponent } from './models/models-list/models-list.component'
     VendorsListComponent,
     PaginatorComponent,
     ModelsComponent,
-    ModelsListComponent
+    ModelsListComponent,
+    CarsComponent,
+    CarsListComponent
   ],
   imports: [CommonModule, MaterialModule, CatalogRoutingModule],
   exports: [CatalogComponent, VendorsComponent, VendorsListComponent]

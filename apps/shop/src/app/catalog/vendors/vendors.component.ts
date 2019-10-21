@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Vendor, VendorsService } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { Router } from '@angular/router';
+import { PaginationService } from '../paginator/pagination.service';
 
 @Component({
   selector: 'cars-shop-ui-vendors',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
 export class VendorsComponent implements OnInit {
   colsNumber = 5;
   paginationLength: number;
-  vendors;
+  vendors: any;
   displayVendors: Vendor[];
 
   constructor(private vendorsService: VendorsService, private router: Router) {}
@@ -32,9 +33,9 @@ export class VendorsComponent implements OnInit {
   paginateVendors(paginationData: PaginationOutput): void {
     this.colsNumber = paginationData.colsNumber;
 
-    this.displayVendors = this.vendors.slice(
-      paginationData.pageIndex * paginationData.pageSize,
-      paginationData.pageSize * (paginationData.pageIndex + 1)
+    this.displayVendors = PaginationService.paginate(
+      paginationData,
+      this.vendors
     );
   }
 

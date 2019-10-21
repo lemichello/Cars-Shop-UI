@@ -1,0 +1,19 @@
+<mat-grid-list [cols]="cols" rowHeight="370px">
+  <mat-grid-tile *ngFor="let car of cars" colspan="1" rowspan="1">
+    <div class="car-tile">
+      <button mat-button class="car-tile-btn">
+        <div class="car-tile-btn-container">
+          <h1 class="car-tile-btn-container__header">
+            {{ car.vendor }} {{ car.model }}
+          </h1>
+          <h3>Color: {{ car.color }}</h3>
+          <h4 class="car-tile-btn-container__description">
+            Description: {{ car.description }}
+          </h4>
+          <h3>Engine volume: {{ car.engineVolume }}</h3>
+          <h2>{{ car.price | currency }}</h2>
+        </div>
+      </button>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>

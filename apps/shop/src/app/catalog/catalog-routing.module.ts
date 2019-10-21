@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CatalogComponent } from './catalog.component';
 import { VendorsComponent } from './vendors/vendors.component';
 import { ModelsComponent } from './models/models.component';
+import { CarsComponent } from './cars/cars.component';
 
 const routes: Routes = [
   {
@@ -10,7 +11,8 @@ const routes: Routes = [
     component: CatalogComponent,
     children: [
       { path: 'vendors', component: VendorsComponent },
-      { path: 'models/:vendorId', component: ModelsComponent }
+      { path: 'models/:vendorId', component: ModelsComponent },
+      { path: 'cars', component: CarsComponent }
     ]
   }
 ];
