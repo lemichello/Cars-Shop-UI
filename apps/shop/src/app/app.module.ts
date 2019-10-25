@@ -8,9 +8,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CoreDataModule } from '@cars-shop-ui/core-data';
+import { CarEditComponent } from './car-edit/car-edit.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, CarEditComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -18,7 +20,8 @@ import { CoreDataModule } from '@cars-shop-ui/core-data';
     HttpClientModule,
     CatalogModule,
     CoreDataModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
