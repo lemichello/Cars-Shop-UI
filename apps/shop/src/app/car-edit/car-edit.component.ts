@@ -28,24 +28,7 @@ export class CarEditComponent implements OnInit {
   models: Model[];
   colors: Color[];
   engineVolumes: EngineVolume[];
-
-  vendorsControl = new FormControl('', [Validators.required]);
-  modelsControl = new FormControl('', [Validators.required]);
-  colorsControl = new FormControl('', [Validators.required]);
-  engineVolumesControl = new FormControl('', [Validators.required]);
-  descriptionControl = new FormControl('', [Validators.required]);
-  priceControl = new FormControl('', [
-    Validators.required,
-    Validators.min(1.0),
-    Validators.pattern(/^\d+(.\d+)?$/)
-  ]);
-  carFormGroup: FormGroup = new FormGroup({
-    vendors: this.vendorsControl,
-    models: this.modelsControl,
-    color: this.colorsControl,
-    description: this.descriptionControl,
-    price: this.priceControl
-  });
+  carFormGroup: FormGroup;
 
   selectedVendor: Vendor;
   selectedModel: Model;
@@ -62,7 +45,20 @@ export class CarEditComponent implements OnInit {
     private colorsService: ColorsService,
     private engineVolumesService: EngineVolumesService,
     private carsService: CarsService
-  ) {}
+  ) {
+    this.carFormGroup = new FormGroup({
+      vendors: new FormControl('', [Validators.required]),
+      models: new FormControl('', [Validators.required]),
+      color: new FormControl('', [Validators.required]),
+      engineVolumes: new FormControl('', [Validators.required]),
+      description: new FormControl('', [Validators.required]),
+      price: new FormControl('', [
+        Validators.required,
+        Validators.min(1.0),
+        Validators.pattern(/^[^0 a-z]\d*(.\d{2})?$/)
+      ])
+    });
+  }
 
   ngOnInit() {
     this.initializeCollections();
