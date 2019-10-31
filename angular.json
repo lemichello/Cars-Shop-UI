@@ -21,7 +21,10 @@
             "polyfills": "apps/shop/src/polyfills.ts",
             "tsConfig": "apps/shop/tsconfig.app.json",
             "aot": false,
-            "assets": ["apps/shop/src/favicon.ico", "apps/shop/src/assets"],
+            "assets": [
+              "apps/shop/src/favicon.ico",
+              "apps/shop/src/assets"
+            ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
               "apps/shop/src/styles.scss"
@@ -84,7 +87,10 @@
               "apps/shop/tsconfig.app.json",
               "apps/shop/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!apps/shop/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shop/**"
+            ]
           }
         },
         "test": {
@@ -118,8 +124,13 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["apps/shop-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/shop-e2e/**"]
+            "tsConfig": [
+              "apps/shop-e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/shop-e2e/**"
+            ]
           }
         }
       }
@@ -137,7 +148,10 @@
               "libs/material/tsconfig.lib.json",
               "libs/material/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/material/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/material/**"
+            ]
           }
         },
         "test": {
@@ -168,7 +182,10 @@
               "libs/core-data/tsconfig.lib.json",
               "libs/core-data/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**", "!libs/core-data/**"]
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/core-data/**"
+            ]
           }
         },
         "test": {
@@ -200,6 +217,9 @@
     },
     "@nrwl/angular:library": {
       "unitTestRunner": "jest"
+    },
+    "@schematics/angular:component": {
+      "styleext": "scss"
     }
   },
   "defaultProject": "shop"

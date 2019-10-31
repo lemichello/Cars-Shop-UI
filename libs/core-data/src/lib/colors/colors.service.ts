@@ -13,4 +13,10 @@ export class ColorsService {
   getAll(): Observable<Color[]> {
     return this.httpClient.get<Color[]>(`${AppSettings.BASE_ADDRESS}/colors`);
   }
+
+  add(color: string): Observable<Object> {
+    return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/colors`, {
+      name: color
+    });
+  }
 }

@@ -13,4 +13,10 @@ export class VendorsService {
   getAll(): Observable<Vendor[]> {
     return this.httpClient.get<Vendor[]>(`${AppSettings.BASE_ADDRESS}/vendors`);
   }
+
+  add(vendorName: string): Observable<Object> {
+    return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/vendors`, {
+      name: vendorName
+    });
+  }
 }

@@ -1,4 +1,32 @@
-.form-fields-container {
+.edit-card {
+  margin: 20px;
+  width: 400px;
+}
+
+.column {
   display: flex;
   flex-direction: column;
+}
+
+.add-btn {
+  margin-left: 10px;
+}
+
+.form-field {
+  button {
+    opacity: 0;
+    transition: visibility 0s, opacity 0.2s linear;
+  }
+
+  &:hover {
+    button {
+      opacity: 1;
+    }
+  }
+}
+
+.price-input-field {
+  input {
+    font-size: 1.4rem;
+  }
 }

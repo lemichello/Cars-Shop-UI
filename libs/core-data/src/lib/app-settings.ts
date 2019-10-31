@@ -1,3 +1,3 @@
 export class AppSettings {
-  public static BASE_ADDRESS = 'https://localhost:5001/api';
+  public static BASE_ADDRESS = 'http://localhost:5000/api';
 }

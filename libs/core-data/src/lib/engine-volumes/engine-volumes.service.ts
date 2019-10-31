@@ -15,4 +15,10 @@ export class EngineVolumesService {
       `${AppSettings.BASE_ADDRESS}/enginevolumes`
     );
   }
+
+  add(engineVolumeValue: number): Observable<Object> {
+    return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/enginevolumes`, {
+      volume: engineVolumeValue
+    });
+  }
 }

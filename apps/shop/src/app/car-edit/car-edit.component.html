@@ -1,45 +1,135 @@
-<mat-card>
+<mat-card class="edit-card">
   <mat-card-header>
     <mat-card-title>
-      <h1 *ngIf="car; else newCar">Edit</h1>
+      <h1 *ngIf="car; else newCar">Editing Car</h1>
       <ng-template #newCar>
-        <h1>New</h1>
+        <h1>New Car</h1>
       </ng-template>
     </mat-card-title>
   </mat-card-header>
-  <form class="form" name="carForm" [formGroup]="carFormGroup">
+  <form
+    class="form"
+    name="carForm"
+    [formGroup]="carFormGroup"
+    (submit)="addCar()"
+  >
     <mat-card-content>
-      <div class="form-fields-container">
-        <mat-form-field class="full-width">
-          <mat-label>Vendors</mat-label>
-          <mat-select
-            [formControl]="vendorsControl"
-            [(value)]="selectedVendor"
-            (selectionChange)="vendorSelected()"
-            required
+      <div class="column">
+        <p class="form-field">
+          <mat-form-field>
+            <mat-label>Vendor</mat-label>
+            <mat-select
+              [formControl]="vendorsControl"
+              [(value)]="selectedVendor"
+              (selectionChange)="vendorSelected()"
+              required
+            >
+              <mat-option *ngFor="let vendor of vendors" [value]="vendor">
+                {{ vendor.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            class="add-btn"
+            (click)="openInputDialog('Vendor', 'name', addVendor.bind(this))"
           >
-            <mat-option *ngFor="let vendor of vendors" [value]="vendor">
-              {{ vendor.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="full-width">
-          <mat-label>Models</mat-label>
-          <mat-select [formControl]="modelsControl" required>
-            <mat-option *ngFor="let model of models" [value]="model">
-              {{ model.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="full-width">
-          <input
-            matInput
-            placeholder="Description"
-            type="text"
-            [formControl]="descriptionControl"
-            required
-          />
-        </mat-form-field>
+            <mat-icon>add</mat-icon>
+          </button>
+        </p>
+        <p class="form-field">
+          <mat-form-field>
+            <mat-label>Model</mat-label>
+            <mat-select
+              [formControl]="modelsControl"
+              [(value)]="selectedModel"
+              required
+            >
+              <mat-option *ngFor="let model of models" [value]="model">
+                {{ model.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            class="add-btn"
+            (click)="validateVendorSelection()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </p>
+        <p class="form-field">
+          <mat-form-field>
+            <mat-label>Color</mat-label>
+            <mat-select
+              [formControl]="colorsControl"
+              [(value)]="selectedColor"
+              required
+            >
+              <mat-option *ngFor="let color of colors" [value]="color">
+                {{ color.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            class="add-btn"
+            (click)="openInputDialog('Color', 'name', addColor.bind(this))"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </p>
+        <p class="form-field">
+          <mat-form-field>
+            <mat-label>Engine volume</mat-label>
+            <mat-select
+              [formControl]="engineVolumesControl"
+              [(value)]="selectedEngineVolume"
+              required
+            >
+              <mat-option
+                *ngFor="let engineVolume of engineVolumes"
+                [value]="engineVolume"
+              >
+                {{ engineVolume.volume }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-mini-fab
+            class="add-btn"
+            (click)="openInputDialog('Engine volume', 'value', addEngineVolume.bind(this))"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </p>
+        <p>
+          <mat-form-field>
+            <textarea
+              matInput
+              placeholder="Description"
+              [formControl]="descriptionControl"
+              [(ngModel)]="description"
+              required
+            ></textarea>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field class="price-input-field">
+            <input
+              matInput
+              placeholder="Price"
+              type="number"
+              min="1"
+              [formControl]="priceControl"
+              [(ngModel)]="price"
+              required
+            />
+            <mat-icon matPrefix>
+              attach_money
+            </mat-icon>
+          </mat-form-field>
+        </p>
       </div>
     </mat-card-content>
     <mat-card-actions>
@@ -50,6 +140,9 @@
         color="primary"
       >
         Save
+      </button>
+      <button mat-raised-button color="warn" routerLink="">
+        Cancel
       </button>
     </mat-card-actions>
   </form>

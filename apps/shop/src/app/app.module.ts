@@ -10,9 +10,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { CoreDataModule } from '@cars-shop-ui/core-data';
 import { CarEditComponent } from './car-edit/car-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material';
+import { InputDialogComponent } from './car-edit/input-dialog/input-dialog.component';
 
 @NgModule({
-  declarations: [AppComponent, CarEditComponent],
+  declarations: [AppComponent, CarEditComponent, InputDialogComponent],
+  entryComponents: [InputDialogComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -21,7 +24,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CatalogModule,
     CoreDataModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

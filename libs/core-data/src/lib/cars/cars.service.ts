@@ -14,7 +14,7 @@ export class CarsService {
     return this.httpClient.get(`${AppSettings.BASE_ADDRESS}/cars`);
   }
 
-  add(car: CarDto): void {
-    this.httpClient.post(`${AppSettings.BASE_ADDRESS}/cars`, car);
+  add(car: CarDto): Observable<Object> {
+    return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/cars`, car);
   }
 }

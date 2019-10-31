@@ -15,4 +15,8 @@ export class ModelsService {
       `${AppSettings.BASE_ADDRESS}/models/${vendorId}`
     );
   }
+
+  add(model: { name: string; vendorId: number }): Observable<Object> {
+    return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/models`, model);
+  }
 }
