@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CarsService, Car } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
-import { PaginationService } from '../paginator/pagination.service';
 
 @Component({
   selector: 'cars-shop-ui-cars',
@@ -11,20 +10,15 @@ import { PaginationService } from '../paginator/pagination.service';
 export class CarsComponent implements OnInit {
   colsNumber = 2;
   paginationLength: number;
-  cars: any;
-  displayCars: Car[];
+  cars: Car[];
 
   constructor(private carsService: CarsService) {}
 
   ngOnInit() {
-    this.carsService.getAll().subscribe(res => {
+    this.carsService.getAll(0, this.colsNumber * 5).subscribe(res => {
       this.cars = res;
-      this.paginationLength = this.cars.length;
-
-      this.paginateCars({
-        colsNumber: this.colsNumber,
-        pageIndex: 0,
-        pageSize: this.colsNumber * 5
+      this.carsService.getCount().subscribe(count => {
+        this.paginationLength = count;
       });
     });
   }
@@ -32,6 +26,10 @@ export class CarsComponent implements OnInit {
   paginateCars(paginationData: PaginationOutput): void {
     this.colsNumber = paginationData.colsNumber;
 
-    this.displayCars = PaginationService.paginate(paginationData, this.cars);
+    this.carsService
+      .getAll(paginationData.pageIndex, paginationData.pageSize)
+      .subscribe(res => {
+        this.cars = res;
+      });
   }
 }

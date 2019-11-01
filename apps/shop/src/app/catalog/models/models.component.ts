@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Model, ModelsService } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { ActivatedRoute } from '@angular/router';
-import { PaginationService } from '../paginator/pagination.service';
 
 @Component({
   selector: 'cars-shop-ui-models',
@@ -13,8 +12,7 @@ export class ModelsComponent implements OnInit {
   vendorId: number;
   colsNumber = 3;
   paginationLength: number;
-  models: any;
-  displayModels: Model[];
+  models: Model[];
 
   constructor(
     private modelsService: ModelsService,
@@ -26,24 +24,27 @@ export class ModelsComponent implements OnInit {
       this.vendorId = +params['vendorId'];
     });
 
-    this.modelsService.getByVendor(this.vendorId).subscribe(res => {
-      this.models = res;
-      this.paginationLength = this.models.length;
-
-      this.paginateModels({
-        colsNumber: this.colsNumber,
-        pageIndex: 0,
-        pageSize: this.colsNumber * 5
+    this.modelsService
+      .getByVendor(this.vendorId, 0, this.colsNumber * 5)
+      .subscribe(res => {
+        this.models = res;
+        this.modelsService.getCount().subscribe(count => {
+          this.paginationLength = count;
+        });
       });
-    });
   }
 
   paginateModels(paginationData: PaginationOutput): void {
     this.colsNumber = paginationData.colsNumber;
 
-    this.displayModels = PaginationService.paginate(
-      paginationData,
-      this.models
-    );
+    this.modelsService
+      .getByVendor(
+        this.vendorId,
+        paginationData.pageIndex,
+        paginationData.pageSize
+      )
+      .subscribe(res => {
+        this.models = res;
+      });
   }
 }
