@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CarsService, Car } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cars-shop-ui-cars',
@@ -12,7 +13,7 @@ export class CarsComponent implements OnInit {
   paginationLength: number;
   cars: Car[];
 
-  constructor(private carsService: CarsService) {}
+  constructor(private carsService: CarsService, private router: Router) {}
 
   ngOnInit() {
     this.carsService.getAll(0, this.colsNumber * 5).subscribe(res => {
@@ -31,5 +32,9 @@ export class CarsComponent implements OnInit {
       .subscribe(res => {
         this.cars = res;
       });
+  }
+
+  navigateToCar(carId: number) {
+    this.router.navigate(['catalog/car', carId]);
   }
 }

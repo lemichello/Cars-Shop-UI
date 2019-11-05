@@ -18,8 +18,6 @@ export class ParamsService {
     params = params.append('index', index.toString());
     params = params.append('size', size.toString());
 
-    console.log(params);
-
     return params;
   }
 }

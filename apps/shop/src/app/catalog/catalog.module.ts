@@ -11,6 +11,7 @@ import { ModelsComponent } from './models/models.component';
 import { ModelsListComponent } from './models/models-list/models-list.component';
 import { CarsComponent } from './cars/cars.component';
 import { CarsListComponent } from './cars/cars-list/cars-list.component';
+import { CarComponent } from './car/car.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { CarsListComponent } from './cars/cars-list/cars-list.component';
     ModelsComponent,
     ModelsListComponent,
     CarsComponent,
-    CarsListComponent
+    CarsListComponent,
+    CarComponent
   ],
   imports: [CommonModule, MaterialModule, CatalogRoutingModule],
   exports: [CatalogComponent, VendorsComponent, VendorsListComponent]

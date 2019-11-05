@@ -1,0 +1,33 @@
+.outer-container {
+  margin: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.prices-history {
+  display: flex;
+  align-items: center;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+  color: green;
+
+  p {
+    margin: 4px 0;
+  }
+}
+
+.history-controls {
+  display: flex;
+
+  button {
+    margin: 10px 10px;
+  }
+}
+
+.car-description {
+  font-style: italic;
+}

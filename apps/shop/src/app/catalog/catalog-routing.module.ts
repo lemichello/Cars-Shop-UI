@@ -4,6 +4,7 @@ import { CatalogComponent } from './catalog.component';
 import { VendorsComponent } from './vendors/vendors.component';
 import { ModelsComponent } from './models/models.component';
 import { CarsComponent } from './cars/cars.component';
+import { CarComponent } from './car/car.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,8 @@ const routes: Routes = [
     children: [
       { path: 'vendors', component: VendorsComponent },
       { path: 'models/:vendorId', component: ModelsComponent },
-      { path: 'cars', component: CarsComponent }
+      { path: 'cars', component: CarsComponent },
+      { path: 'car/:carId', component: CarComponent }
     ]
   }
 ];

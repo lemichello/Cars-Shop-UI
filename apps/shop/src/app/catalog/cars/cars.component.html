@@ -9,5 +9,6 @@
   <cars-shop-ui-cars-list
     [cols]="colsNumber"
     [cars]="cars"
+    (selectedCar)="navigateToCar($event)"
   ></cars-shop-ui-cars-list>
 </div>

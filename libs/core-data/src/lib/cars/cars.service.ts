@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AppSettings } from '../app-settings';
-import { CarDto } from './carDto';
-import { Car } from './car';
+import { CarDto } from './models/carDto';
+import { Car } from './models/car';
 import { ParamsService } from '../params/params.service';
+import { DetailedCar } from './models/detailed-car';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,13 @@ export class CarsService {
   getCount(): Observable<number> {
     return this.httpClient.get<number>(
       `${AppSettings.BASE_ADDRESS}/cars/count`
+    );
+  }
+
+  getById(carId: number): Observable<HttpResponse<DetailedCar>> {
+    return this.httpClient.get<DetailedCar>(
+      `${AppSettings.BASE_ADDRESS}/cars/${carId}`,
+      { observe: 'response' }
     );
   }
 }

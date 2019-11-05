@@ -1,0 +1,29 @@
+<div class="outer-container">
+  <h1>{{ car?.vendor }} {{ car?.model }}</h1>
+  <div class="prices-history">
+    <div class="price-info">
+      <p>{{ (this.car?.pricesHistory)[priceHistoryIndex]?.date | date }}</p>
+      <p>
+        {{ (this.car?.pricesHistory)[priceHistoryIndex]?.price | currency }}
+      </p>
+    </div>
+    <div class="history-controls">
+      <button
+        mat-mini-fab
+        (click)="priceHistoryIndex = priceHistoryIndex - 1"
+        [disabled]="priceHistoryIndex === 0"
+      >
+        <mat-icon>keyboard_arrow_left</mat-icon>
+      </button>
+      <button
+        mat-mini-fab
+        (click)="priceHistoryIndex = priceHistoryIndex + 1"
+        [disabled]="priceHistoryIndex === this.car?.pricesHistory?.length - 1"
+      >
+        <mat-icon>keyboard_arrow_right</mat-icon>
+      </button>
+    </div>
+  </div>
+  <h2>Color: {{ this.car?.color }}</h2>
+  <h4 class="car-description">Description: {{ this.car?.description }}</h4>
+</div>
