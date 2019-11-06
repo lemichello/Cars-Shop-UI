@@ -51,7 +51,7 @@ export class CarEditComponent implements OnInit {
       models: new FormControl('', [Validators.required]),
       color: new FormControl('', [Validators.required]),
       engineVolumes: new FormControl('', [Validators.required]),
-      description: new FormControl('', [Validators.required]),
+      description: new FormControl(''),
       price: new FormControl('', [
         Validators.required,
         Validators.min(1.0),

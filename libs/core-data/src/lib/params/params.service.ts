@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
-import { isNull } from 'util';
+import { isUndefined } from 'util';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class ParamsService {
   public static getPaginationParams(index?: number, size?: number): HttpParams {
     let params = new HttpParams();
 
-    if (isNull(index) || isNull(size)) {
+    if (isUndefined(index) || isUndefined(size)) {
       return params;
     }
 
