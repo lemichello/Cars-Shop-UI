@@ -25,7 +25,9 @@
     </div>
   </div>
   <h2>Color: {{ this.car?.color }}</h2>
-  <h4 *ngIf="car?.description" class="car-description">
-    Description: {{ this.car?.description }}
-  </h4>
+  <h4 *ngIf="car?.description">Description: {{ this.car?.description }}</h4>
+  <button mat-raised-button color="primary" (click)="editCar()">
+    <mat-icon>edit</mat-icon>
+    Edit
+  </button>
 </div>

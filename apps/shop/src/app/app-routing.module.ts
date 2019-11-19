@@ -7,7 +7,7 @@ const routes: Routes = [
     path: 'catalog',
     loadChildren: './catalog/catalog.module#CatalogModule'
   },
-  { path: 'car', component: CarEditComponent },
+  { path: 'car/:carId', component: CarEditComponent },
   { path: '**', redirectTo: 'catalog', pathMatch: 'full' }
 ];
 

@@ -1,7 +1,7 @@
 <mat-card class="edit-card">
   <mat-card-header>
     <mat-card-title>
-      <h1 *ngIf="car; else newCar">Editing Car</h1>
+      <h1 *ngIf="carId; else newCar">Editing a Car</h1>
       <ng-template #newCar>
         <h1>New Car</h1>
       </ng-template>

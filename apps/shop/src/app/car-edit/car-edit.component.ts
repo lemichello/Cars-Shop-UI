@@ -12,9 +12,9 @@ import {
   VendorsService
 } from '@cars-shop-ui/core-data';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { InputDialogComponent } from './input-dialog/input-dialog.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cars-shop-ui-car-edit',
@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./car-edit.component.scss']
 })
 export class CarEditComponent implements OnInit {
-  @Input() car?: Car;
+  carId?: number;
 
   vendors: Vendor[];
   models: Model[];
@@ -39,7 +39,9 @@ export class CarEditComponent implements OnInit {
 
   constructor(
     public dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private router: Router,
+    private route: ActivatedRoute,
     private vendorsService: VendorsService,
     private modelsService: ModelsService,
     private colorsService: ColorsService,
@@ -61,6 +63,12 @@ export class CarEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      if (params['carId'] && params['carId'] !== 'new') {
+        this.carId = +params['carId'];
+      }
+    });
+
     this.initializeCollections();
 
     // TODO: add autofill when car is editing.
@@ -96,6 +104,10 @@ export class CarEditComponent implements OnInit {
     this.refreshEngineVolumes();
   }
 
+  private openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action, { duration: 3000 });
+  }
+
   vendorSelected(): void {
     this.refreshModels(this.selectedVendor.id);
   }
@@ -123,7 +135,10 @@ export class CarEditComponent implements OnInit {
 
   validateVendorSelection(): void {
     if (!this.selectedVendor) {
-      alert('You need to select vendor, for which you want to add a model');
+      this.openSnackBar(
+        'You need to select vendor, for which you want to add a model',
+        'OK'
+      );
       return;
     }
 
@@ -159,7 +174,7 @@ export class CarEditComponent implements OnInit {
     const engineVolumeValue = Number(engineVolume);
 
     if (Number.isNaN(engineVolumeValue)) {
-      alert('You entered incorrect value of engine volume. Try again.');
+      this.openSnackBar('You entered incorrect value of engine volume', 'OK');
       return;
     }
 
@@ -178,6 +193,7 @@ export class CarEditComponent implements OnInit {
         price: this.price
       })
       .subscribe(() => {
+        this.openSnackBar('Successfully updated', 'OK');
         this.router.navigate(['catalog/cars']);
       });
   }

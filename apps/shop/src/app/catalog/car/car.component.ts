@@ -34,4 +34,8 @@ export class CarComponent implements OnInit {
       }
     );
   }
+
+  editCar(): void {
+    this.router.navigate(['car', this.carId.toString()]);
+  }
 }
