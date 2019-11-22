@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./cars.component.scss']
 })
 export class CarsComponent implements OnInit {
-  colsNumber = 2;
+  colsNumber = 3;
   paginationLength: number;
   cars: Car[];
 
