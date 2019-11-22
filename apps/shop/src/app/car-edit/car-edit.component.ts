@@ -258,4 +258,12 @@ export class CarEditComponent implements OnInit {
         this.router.navigate(['catalog/car', this.car.id]);
       });
   }
+
+  cancelEdit() {
+    if(this.carId) {
+      this.router.navigate(['catalog/car', this.carId]);
+    } else {
+      this.router.navigate(['catalog/cars']);
+    }
+  }
 }
