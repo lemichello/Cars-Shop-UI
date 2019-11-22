@@ -15,11 +15,14 @@
             <mat-label>Vendor</mat-label>
             <mat-select
               formControlName="vendors"
-              [(value)]="selectedVendor"
+              [(value)]="selectedVendorId"
               (selectionChange)="vendorSelected()"
               required
             >
-              <mat-option *ngFor="let vendor of vendors" [value]="vendor">
+              <mat-option
+                *ngFor="let vendor of vendors | async"
+                [value]="vendor.id"
+              >
                 {{ vendor.name }}
               </mat-option>
             </mat-select>
@@ -37,10 +40,13 @@
             <mat-label>Model</mat-label>
             <mat-select
               formControlName="models"
-              [(value)]="selectedModel"
+              [(value)]="selectedModelId"
               required
             >
-              <mat-option *ngFor="let model of models" [value]="model">
+              <mat-option
+                *ngFor="let model of models | async"
+                [value]="model.id"
+              >
                 {{ model.name }}
               </mat-option>
             </mat-select>
@@ -57,11 +63,14 @@
           <mat-form-field>
             <mat-label>Color</mat-label>
             <mat-select
-              formControlName="color"
-              [(value)]="selectedColor"
+              formControlName="colors"
+              [(value)]="selectedColorId"
               required
             >
-              <mat-option *ngFor="let color of colors" [value]="color">
+              <mat-option
+                *ngFor="let color of colors | async"
+                [value]="color.id"
+              >
                 {{ color.name }}
               </mat-option>
             </mat-select>
@@ -79,12 +88,12 @@
             <mat-label>Engine volume</mat-label>
             <mat-select
               formControlName="engineVolumes"
-              [(value)]="selectedEngineVolume"
+              [(value)]="selectedEngineVolumeId"
               required
             >
               <mat-option
-                *ngFor="let engineVolume of engineVolumes"
-                [value]="engineVolume"
+                *ngFor="let engineVolume of engineVolumes | async"
+                [value]="engineVolume.id"
               >
                 {{ engineVolume.volume }}
               </mat-option>
@@ -132,7 +141,7 @@
         type="submit"
         mat-raised-button
         color="primary"
-        (click)="addCar()"
+        (click)="saveCar()"
       >
         Save
       </button>

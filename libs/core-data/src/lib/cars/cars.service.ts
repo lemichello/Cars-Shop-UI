@@ -6,6 +6,7 @@ import { CarDto } from './models/carDto';
 import { Car } from './models/car';
 import { ParamsService } from '../params/params.service';
 import { DetailedCar } from './models/detailed-car';
+import { EditCarDto } from './models/edit-car-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +20,21 @@ export class CarsService {
     });
   }
 
+  getSimplified(carId: number): Observable<EditCarDto> {
+    return this.httpClient.get<EditCarDto>(
+      `${AppSettings.BASE_ADDRESS}/cars/simplified/${carId}`
+    );
+  }
+
   add(car: CarDto): Observable<Object> {
     return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/cars`, car);
+  }
+
+  update(car: EditCarDto): Observable<Object> {
+    return this.httpClient.put(
+      `${AppSettings.BASE_ADDRESS}/cars/${car.id}`,
+      car
+    );
   }
 
   getCount(): Observable<number> {
