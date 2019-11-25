@@ -3,16 +3,18 @@
 }
 
 .sidenav {
-  min-width: 200px;
+  min-width: 300px;
 }
 
 .filters-container {
   display: flex;
   flex-direction: column;
+  padding: 0 10px;
 }
 
 .filters-btn {
   margin: 10px;
+  transition: visibility 0s, opacity 0.2s linear;
 }
 
 .navigation-buttons {
@@ -24,5 +26,6 @@
 }
 
 .hidden {
+  opacity: 0;
   visibility: hidden;
 }
