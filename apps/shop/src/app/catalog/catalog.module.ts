@@ -12,6 +12,8 @@ import { ModelsListComponent } from './models/models-list/models-list.component'
 import { CarsComponent } from './cars/cars.component';
 import { CarsListComponent } from './cars/cars-list/cars-list.component';
 import { CarComponent } from './car/car.component';
+import { FiltersComponent } from './filters/filters.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,9 +25,15 @@ import { CarComponent } from './car/car.component';
     ModelsListComponent,
     CarsComponent,
     CarsListComponent,
-    CarComponent
+    CarComponent,
+    FiltersComponent
   ],
-  imports: [CommonModule, MaterialModule, CatalogRoutingModule],
+  imports: [
+    CommonModule,
+    MaterialModule,
+    CatalogRoutingModule,
+    ReactiveFormsModule
+  ],
   exports: [CatalogComponent, VendorsComponent, VendorsListComponent]
 })
 export class CatalogModule {}

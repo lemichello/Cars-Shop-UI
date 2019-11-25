@@ -20,7 +20,10 @@ import {
   MatProgressSpinnerModule,
   MatTooltipModule,
   MatChipsModule,
-  MatDialogModule
+  MatDialogModule,
+  MatTreeModule,
+  MatExpansionModule,
+  MatAutocompleteModule
 } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
@@ -47,7 +50,9 @@ import { FormsModule } from '@angular/forms';
     MatTooltipModule,
     MatChipsModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTreeModule,
+    MatAutocompleteModule
   ],
   exports: [
     MatButtonModule,
@@ -71,7 +76,10 @@ import { FormsModule } from '@angular/forms';
     MatTooltipModule,
     MatChipsModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTreeModule,
+    MatExpansionModule,
+    MatAutocompleteModule
   ]
 })
 export class MaterialModule {}

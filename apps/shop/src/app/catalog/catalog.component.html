@@ -6,11 +6,11 @@
         matTooltip="Hide filters"
         class="filters-btn"
         (click)="sidenav.toggle()"
-        [ngClass]="{'hidden': sidenav.position === 'end'}"
+        [ngClass]="{ hidden: sidenav.position === 'end' }"
       >
         <mat-icon>filter_list</mat-icon>
       </button>
-      <h2>Filters</h2>
+      <cars-shop-ui-filters></cars-shop-ui-filters>
     </div>
   </mat-sidenav>
   <div>
@@ -19,7 +19,7 @@
       matTooltip="Show filters"
       class="filters-btn"
       (click)="sidenav.toggle()"
-      [ngClass]="{'hidden': sidenav.opened}"
+      [ngClass]="{ hidden: sidenav.opened }"
     >
       <mat-icon>filter_list</mat-icon>
     </button>
