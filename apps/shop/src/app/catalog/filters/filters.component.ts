@@ -7,7 +7,13 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Color, ColorsService, VendorsService } from '@cars-shop-ui/core-data';
+import {
+  Color,
+  ColorsService,
+  EngineVolume,
+  EngineVolumesService,
+  VendorsService
+} from '@cars-shop-ui/core-data';
 
 @Component({
   selector: 'cars-shop-ui-filters',
@@ -16,9 +22,13 @@ import { Color, ColorsService, VendorsService } from '@cars-shop-ui/core-data';
 })
 export class FiltersComponent implements OnInit {
   colorsFormControl = new FormControl();
+  colorsOptions: Color[];
   colorsFilteredOptions: Observable<Color[]>;
 
-  colorsOptions: Color[];
+  engineVolumesFormControl = new FormControl();
+  engineVolumesOptions: EngineVolume[];
+  engineVolumesFilteredOptions: Observable<EngineVolume[]>;
+
   treeControl = new FlatTreeControl<ModelFlatNode>(
     node => node.level,
     node => node.expandable
@@ -32,7 +42,8 @@ export class FiltersComponent implements OnInit {
 
   constructor(
     private _vendorsService: VendorsService,
-    private _colorsService: ColorsService
+    private _colorsService: ColorsService,
+    private _engineVolumesService: EngineVolumesService
   ) {
     this.treeFlattener = new MatTreeFlattener(
       this._transformer,
@@ -58,7 +69,18 @@ export class FiltersComponent implements OnInit {
 
       this.colorsFilteredOptions = this.colorsFormControl.valueChanges.pipe(
         startWith(''),
-        map(value => this._filter(value, this.colorsOptions))
+        map(value => this._filter<Color>(value, this.colorsOptions, 'name'))
+      );
+    });
+
+    this._engineVolumesService.getAll().subscribe(res => {
+      this.engineVolumesOptions = res;
+
+      this.engineVolumesFilteredOptions = this.engineVolumesFormControl.valueChanges.pipe(
+        startWith(''),
+        map(value =>
+          this._filter<EngineVolume>(value, this.engineVolumesOptions, 'volume')
+        )
       );
     });
   }
@@ -71,17 +93,20 @@ export class FiltersComponent implements OnInit {
       data: node
     };
   };
-  private _filter(value: Color | string, options: Color[]): Color[] {
+  private _filter<T>(value: T | string, options: T[], prop: string): any[] {
     let filterValue: string;
 
     if (typeof value === 'string') {
       filterValue = value;
     } else {
-      filterValue = value ? value.name.toLowerCase() : '';
+      filterValue = value ? value[prop].toString().toLowerCase() : '';
     }
 
     return options.filter(option =>
-      option.name.toLowerCase().includes(filterValue)
+      option[prop]
+        .toString()
+        .toLowerCase()
+        .includes(filterValue)
     );
   }
 
@@ -167,6 +192,10 @@ export class FiltersComponent implements OnInit {
 
   displayColorFn(color: Color): string | undefined {
     return color ? color.name : undefined;
+  }
+
+  displayEngineVolumeFn(volume: EngineVolume): string | undefined {
+    return volume ? volume.volume.toString() : undefined;
   }
 
   search() {

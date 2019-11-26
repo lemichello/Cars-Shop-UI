@@ -46,9 +46,9 @@
           placeholder="Enter a color"
           aria-label="Color"
           [formControl]="colorsFormControl"
-          [matAutocomplete]="autocomplete"
+          [matAutocomplete]="colorsAutocomplete"
         />
-        <mat-autocomplete #autocomplete [displayWith]="displayColorFn">
+        <mat-autocomplete #colorsAutocomplete [displayWith]="displayColorFn">
           <mat-option
             *ngFor="let option of colorsFilteredOptions | async"
             [value]="option"
@@ -61,8 +61,31 @@
   </mat-expansion-panel>
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title></mat-panel-title>
+      <mat-panel-title>Engine Volumes</mat-panel-title>
     </mat-expansion-panel-header>
+    <form>
+      <mat-form-field class="full-width">
+        <input
+          matInput
+          type="text"
+          placeholder="Enter an Engine Volume"
+          aria-label="Engine Volume"
+          [formControl]="engineVolumesFormControl"
+          [matAutocomplete]="enginesAutocomplete"
+        />
+        <mat-autocomplete
+          #enginesAutocomplete
+          [displayWith]="displayEngineVolumeFn"
+        >
+          <mat-option
+            *ngFor="let option of engineVolumesFilteredOptions | async"
+            [value]="option"
+          >
+            {{ option.volume }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
   </mat-expansion-panel>
 </mat-accordion>
 <button class="search-btn" mat-raised-button color="accent" (click)="search()">
