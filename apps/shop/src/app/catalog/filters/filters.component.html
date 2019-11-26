@@ -48,12 +48,12 @@
           [formControl]="colorsFormControl"
           [matAutocomplete]="autocomplete"
         />
-        <mat-autocomplete #autocomplete>
+        <mat-autocomplete #autocomplete [displayWith]="displayColorFn">
           <mat-option
             *ngFor="let option of colorsFilteredOptions | async"
             [value]="option"
           >
-            {{ option }}
+            {{ option.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

@@ -7,7 +7,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { VendorsService } from '@cars-shop-ui/core-data';
+import { Color, ColorsService, VendorsService } from '@cars-shop-ui/core-data';
 
 @Component({
   selector: 'cars-shop-ui-filters',
@@ -16,9 +16,9 @@ import { VendorsService } from '@cars-shop-ui/core-data';
 })
 export class FiltersComponent implements OnInit {
   colorsFormControl = new FormControl();
-  colorsFilteredOptions: Observable<string[]>;
+  colorsFilteredOptions: Observable<Color[]>;
 
-  colorsOptions: string[] = ['One', 'Two', 'Three'];
+  colorsOptions: Color[];
   treeControl = new FlatTreeControl<ModelFlatNode>(
     node => node.level,
     node => node.expandable
@@ -30,7 +30,10 @@ export class FiltersComponent implements OnInit {
   dataSource: MatTreeFlatDataSource<any, any>;
   checkListSelection = new SelectionModel<ModelFlatNode>(true);
 
-  constructor(private _vendorsService: VendorsService) {
+  constructor(
+    private _vendorsService: VendorsService,
+    private _colorsService: ColorsService
+  ) {
     this.treeFlattener = new MatTreeFlattener(
       this._transformer,
       node => node.level,
@@ -43,16 +46,20 @@ export class FiltersComponent implements OnInit {
       this.treeFlattener
     );
     this.dataSource.data = [];
-
-    this.colorsFilteredOptions = this.colorsFormControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value, this.colorsOptions))
-    );
   }
 
   ngOnInit() {
     this._vendorsService.getDetailed().subscribe(res => {
       this.dataSource.data = res;
+    });
+
+    this._colorsService.getAll().subscribe(res => {
+      this.colorsOptions = res;
+
+      this.colorsFilteredOptions = this.colorsFormControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value, this.colorsOptions))
+      );
     });
   }
 
@@ -64,10 +71,18 @@ export class FiltersComponent implements OnInit {
       data: node
     };
   };
-  private _filter(value: string, options: string[]): string[] {
-    const filterValue = value.toLowerCase();
+  private _filter(value: Color | string, options: Color[]): Color[] {
+    let filterValue: string;
 
-    return options.filter(option => option.toLowerCase().includes(filterValue));
+    if (typeof value === 'string') {
+      filterValue = value;
+    } else {
+      filterValue = value ? value.name.toLowerCase() : '';
+    }
+
+    return options.filter(option =>
+      option.name.toLowerCase().includes(filterValue)
+    );
   }
 
   getLevel = (node: ModelFlatNode) => node.level;
@@ -148,6 +163,10 @@ export class FiltersComponent implements OnInit {
 
     descendants.every(child => this.checkListSelection.isSelected(child));
     this.checkAllParentSelection(node);
+  }
+
+  displayColorFn(color: Color): string | undefined {
+    return color ? color.name : undefined;
   }
 
   search() {
