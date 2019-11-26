@@ -7,43 +7,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-
-const JSON_DATA: ModelNode[] = [
-  {
-    name: 'Mercedes',
-    isModel: false,
-    id: 1,
-    models: [
-      {
-        name: 'A129',
-        isModel: true,
-        id: 1
-      },
-      {
-        name: 'S2',
-        isModel: true,
-        id: 2
-      }
-    ]
-  },
-  {
-    name: 'Volkswagen',
-    isModel: false,
-    id: 2,
-    models: [
-      {
-        name: 'Toureg',
-        isModel: true,
-        id: 3
-      },
-      {
-        name: 'Rodster',
-        isModel: true,
-        id: 4
-      }
-    ]
-  }
-];
+import { VendorsService } from '@cars-shop-ui/core-data';
 
 @Component({
   selector: 'cars-shop-ui-filters',
@@ -51,19 +15,6 @@ const JSON_DATA: ModelNode[] = [
   styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
-  private _transformer = (node: ModelNode, level: number) => {
-    return {
-      expandable: !!node.models && node.models.length > 0,
-      name: node.name,
-      level: level
-    };
-  };
-  private _filter(value: string, options: string[]): string[] {
-    const filterValue = value.toLowerCase();
-
-    return options.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
   colorsFormControl = new FormControl();
   colorsFilteredOptions: Observable<string[]>;
 
@@ -72,30 +23,57 @@ export class FiltersComponent implements OnInit {
     node => node.level,
     node => node.expandable
   );
-  treeFlattener = new MatTreeFlattener(
-    this._transformer,
-    node => node.level,
-    node => node.expandable,
-    node => node.models
-  );
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  treeFlattener: MatTreeFlattener<
+    ModelNode,
+    { expandable: boolean; level: number; name: string }
+  >;
+  dataSource: MatTreeFlatDataSource<any, any>;
   checkListSelection = new SelectionModel<ModelFlatNode>(true);
 
-  constructor() {
-    this.dataSource.data = JSON_DATA;
-  }
+  constructor(private _vendorsService: VendorsService) {
+    this.treeFlattener = new MatTreeFlattener(
+      this._transformer,
+      node => node.level,
+      node => node.expandable,
+      node => node.models
+    );
 
-  ngOnInit() {
+    this.dataSource = new MatTreeFlatDataSource(
+      this.treeControl,
+      this.treeFlattener
+    );
+    this.dataSource.data = [];
+
     this.colorsFilteredOptions = this.colorsFormControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value, this.colorsOptions))
     );
   }
 
+  ngOnInit() {
+    this._vendorsService.getDetailed().subscribe(res => {
+      this.dataSource.data = res;
+    });
+  }
+
+  private _transformer = (node: ModelNode, level: number) => {
+    return {
+      expandable: !!node.models && node.models.length > 0,
+      name: node.name,
+      level: level,
+      data: node
+    };
+  };
+  private _filter(value: string, options: string[]): string[] {
+    const filterValue = value.toLowerCase();
+
+    return options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
   getLevel = (node: ModelFlatNode) => node.level;
   hasChild = (_: number, nodeData: ModelFlatNode) => nodeData.expandable;
 
-  nodeSelectionToggle(node: ModelFlatNode): void {
+  nodeLeafSelectionToggle(node: ModelFlatNode): void {
     this.checkListSelection.toggle(node);
     this.checkAllParentSelection(node);
   }
@@ -159,7 +137,7 @@ export class FiltersComponent implements OnInit {
     return result && !this.descendantsAllSelected(node);
   }
 
-  todoItemSelectionToggle(node: ModelFlatNode): void {
+  nodeSelectionToggle(node: ModelFlatNode): void {
     this.checkListSelection.toggle(node);
 
     const descendants = this.treeControl.getDescendants(node);
@@ -170,5 +148,13 @@ export class FiltersComponent implements OnInit {
 
     descendants.every(child => this.checkListSelection.isSelected(child));
     this.checkAllParentSelection(node);
+  }
+
+  search() {
+    console.log(
+      this.treeControl.dataNodes.filter(x =>
+        this.checkListSelection.isSelected(x)
+      )
+    );
   }
 }

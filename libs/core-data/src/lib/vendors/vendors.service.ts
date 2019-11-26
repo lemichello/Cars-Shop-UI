@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AppSettings } from '../app-settings';
 import { Vendor } from './vendor';
 import { ParamsService } from '../params/params.service';
+import { DetailedVendor } from './detailed-vendor';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,12 @@ export class VendorsService {
   getCount(): Observable<number> {
     return this.httpClient.get<number>(
       `${AppSettings.BASE_ADDRESS}/vendors/count`
+    );
+  }
+
+  getDetailed(): Observable<DetailedVendor[]> {
+    return this.httpClient.get<DetailedVendor[]>(
+      `${AppSettings.BASE_ADDRESS}/vendors/detailed`
     );
   }
 }
