@@ -23,7 +23,9 @@ import {
   MatDialogModule,
   MatTreeModule,
   MatExpansionModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatDatepickerModule,
+  MatNativeDateModule
 } from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
@@ -52,7 +54,9 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     MatDialogModule,
     MatTreeModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatNativeDateModule,
+    MatDatepickerModule
   ],
   exports: [
     MatButtonModule,
@@ -79,7 +83,9 @@ import { FormsModule } from '@angular/forms';
     MatDialogModule,
     MatTreeModule,
     MatExpansionModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatNativeDateModule,
+    MatDatepickerModule
   ]
 })
 export class MaterialModule {}

@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {
+  CarsService,
   Color,
   ColorsService,
   EngineVolume,
@@ -40,10 +41,15 @@ export class FiltersComponent implements OnInit {
   dataSource: MatTreeFlatDataSource<any, any>;
   checkListSelection = new SelectionModel<ModelFlatNode>(true);
 
+  minPrice: number;
+  maxPrice: number;
+  maxDate = new Date(Date.now());
+
   constructor(
     private _vendorsService: VendorsService,
     private _colorsService: ColorsService,
-    private _engineVolumesService: EngineVolumesService
+    private _engineVolumesService: EngineVolumesService,
+    private _carsService: CarsService
   ) {
     this.treeFlattener = new MatTreeFlattener(
       this._transformer,
@@ -82,6 +88,11 @@ export class FiltersComponent implements OnInit {
           this._filter<EngineVolume>(value, this.engineVolumesOptions, 'volume')
         )
       );
+    });
+
+    this._carsService.getMinMaxPrices().subscribe(res => {
+      this.minPrice = res[0];
+      this.maxPrice = res[1];
     });
   }
 
@@ -196,6 +207,14 @@ export class FiltersComponent implements OnInit {
 
   displayEngineVolumeFn(volume: EngineVolume): string | undefined {
     return volume ? volume.volume.toString() : undefined;
+  }
+
+  displayPriceFn(value: number) {
+    if (value >= 1000) {
+      return Math.round(value / 1000) + 'k';
+    }
+
+    return value;
   }
 
   search() {

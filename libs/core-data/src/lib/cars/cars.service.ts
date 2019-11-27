@@ -49,4 +49,10 @@ export class CarsService {
       { observe: 'response' }
     );
   }
+
+  getMinMaxPrices(): Observable<number[]> {
+    return this.httpClient.get<number[]>(
+      `${AppSettings.BASE_ADDRESS}/cars/min-max-prices`
+    );
+  }
 }

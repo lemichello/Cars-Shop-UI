@@ -87,6 +87,41 @@
       </mat-form-field>
     </form>
   </mat-expansion-panel>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Price</mat-panel-title>
+    </mat-expansion-panel-header>
+    <mat-form-field>
+      <input
+        matInput
+        [max]="maxDate"
+        [matDatepicker]="datePicker"
+        placeholder="Date on which the price will be taken"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="datePicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #datePicker></mat-datepicker>
+    </mat-form-field>
+    <div class="d-flex align-items-center fs-2">
+      <mat-slider
+        thumbLabel
+        class="w-80"
+        [min]="minPrice"
+        [max]="maxPrice"
+        [displayWith]="displayPriceFn"
+      ></mat-slider>
+      <mat-icon class="price-range-icon">remove</mat-icon>
+      <mat-slider
+        thumbLabel
+        class="w-80"
+        [min]="minPrice"
+        [max]="maxPrice"
+        [displayWith]="displayPriceFn"
+      ></mat-slider>
+    </div>
+  </mat-expansion-panel>
 </mat-accordion>
 <button class="search-btn" mat-raised-button color="accent" (click)="search()">
   <mat-icon>search</mat-icon>
