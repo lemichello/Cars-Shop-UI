@@ -96,6 +96,7 @@
         matInput
         [max]="maxDate"
         [matDatepicker]="datePicker"
+        [formControl]="priceDateFormControl"
         placeholder="Date on which the price will be taken"
       />
       <mat-datepicker-toggle
@@ -110,6 +111,7 @@
         class="w-80"
         [min]="minPrice"
         [max]="maxPrice"
+        [(value)]="fromPrice"
         [displayWith]="displayPriceFn"
       ></mat-slider>
       <mat-icon class="price-range-icon">remove</mat-icon>
@@ -118,12 +120,19 @@
         class="w-80"
         [min]="minPrice"
         [max]="maxPrice"
+        [(value)]="toPrice"
         [displayWith]="displayPriceFn"
       ></mat-slider>
     </div>
   </mat-expansion-panel>
 </mat-accordion>
-<button class="search-btn" mat-raised-button color="accent" (click)="search()">
-  <mat-icon>search</mat-icon>
-  Search
-</button>
+<div class="filter-actions">
+  <button mat-raised-button color="warn" (click)="resetFilters()">
+    <mat-icon>clear_all</mat-icon>
+    Reset
+  </button>
+  <button mat-raised-button color="accent" (click)="search()">
+    <mat-icon>search</mat-icon>
+    Search
+  </button>
+</div>

@@ -7,6 +7,7 @@ import { Car } from './models/car';
 import { ParamsService } from '../params/params.service';
 import { DetailedCar } from './models/detailed-car';
 import { EditCarDto } from './models/edit-car-dto';
+import { CarsFilter } from './models/cars-filter';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,20 @@ export class CarsService {
   getMinMaxPrices(): Observable<number[]> {
     return this.httpClient.get<number[]>(
       `${AppSettings.BASE_ADDRESS}/cars/min-max-prices`
+    );
+  }
+
+  getFilteredCars(
+    index: number,
+    size: number,
+    filter: CarsFilter
+  ): Observable<Car[]> {
+    return this.httpClient.post<Car[]>(
+      `${AppSettings.BASE_ADDRESS}/cars/filtered`,
+      filter,
+      {
+        params: ParamsService.getPaginationParams(index, size)
+      }
     );
   }
 }

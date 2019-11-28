@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {
+  MatSnackBar,
+  MatTreeFlatDataSource,
+  MatTreeFlattener
+} from '@angular/material';
 import { ModelNode } from './model-node';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { ModelFlatNode } from './model-flat-node';
@@ -8,6 +12,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import {
+  CarsFilter,
   CarsService,
   Color,
   ColorsService,
@@ -22,6 +27,9 @@ import {
   styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
+  @Output() filtered = new EventEmitter();
+  @Output() reseted = new EventEmitter();
+
   colorsFormControl = new FormControl();
   colorsOptions: Color[];
   colorsFilteredOptions: Observable<Color[]>;
@@ -29,6 +37,8 @@ export class FiltersComponent implements OnInit {
   engineVolumesFormControl = new FormControl();
   engineVolumesOptions: EngineVolume[];
   engineVolumesFilteredOptions: Observable<EngineVolume[]>;
+
+  priceDateFormControl = new FormControl();
 
   treeControl = new FlatTreeControl<ModelFlatNode>(
     node => node.level,
@@ -44,12 +54,15 @@ export class FiltersComponent implements OnInit {
   minPrice: number;
   maxPrice: number;
   maxDate = new Date(Date.now());
+  fromPrice: number;
+  toPrice: number;
 
   constructor(
     private _vendorsService: VendorsService,
     private _colorsService: ColorsService,
     private _engineVolumesService: EngineVolumesService,
-    private _carsService: CarsService
+    private _carsService: CarsService,
+    private _snackBar: MatSnackBar
   ) {
     this.treeFlattener = new MatTreeFlattener(
       this._transformer,
@@ -93,6 +106,9 @@ export class FiltersComponent implements OnInit {
     this._carsService.getMinMaxPrices().subscribe(res => {
       this.minPrice = res[0];
       this.maxPrice = res[1];
+
+      this.toPrice = this.maxPrice;
+      this.fromPrice = this.minPrice;
     });
   }
 
@@ -108,7 +124,7 @@ export class FiltersComponent implements OnInit {
     let filterValue: string;
 
     if (typeof value === 'string') {
-      filterValue = value;
+      filterValue = value.toLowerCase();
     } else {
       filterValue = value ? value[prop].toString().toLowerCase() : '';
     }
@@ -217,11 +233,52 @@ export class FiltersComponent implements OnInit {
     return value;
   }
 
+  private showSnackBar(message: string, action: string): void {
+    this._snackBar.open(message, action, { duration: 3000 });
+  }
+
+  resetToDefaultValues(): void {
+    this.treeControl.dataNodes
+      .filter(x => this.checkListSelection.isSelected(x))
+      .forEach(x => this.checkListSelection.deselect(x));
+    this.colorsFormControl.setValue(null);
+    this.engineVolumesFormControl.setValue(null);
+    this.fromPrice = this.minPrice;
+    this.toPrice = this.maxPrice;
+    this.priceDateFormControl.setValue(null);
+  }
+
+  resetFilters(): void {
+    this.resetToDefaultValues();
+    this.reseted.emit();
+  }
+
   search() {
-    console.log(
-      this.treeControl.dataNodes.filter(x =>
-        this.checkListSelection.isSelected(x)
-      )
-    );
+    if (this.fromPrice > this.toPrice) {
+      this.showSnackBar(
+        "Minimal price shouldn't be bigger, than maximal price",
+        'OK'
+      );
+      return;
+    }
+
+    const filter: CarsFilter = {
+      colorId: this.colorsFormControl.value
+        ? this.colorsFormControl.value.id
+        : null,
+      engineVolumeId: this.engineVolumesFormControl.value
+        ? this.engineVolumesFormControl.value.id
+        : null,
+      modelsId: this.treeControl.dataNodes
+        .filter(x => this.checkListSelection.isSelected(x))
+        .map(x => x.data.id),
+      price: {
+        fromPrice: this.fromPrice,
+        toPrice: this.toPrice,
+        selectedDate: this.priceDateFormControl.value
+      }
+    };
+
+    this.filtered.emit(filter);
   }
 }

@@ -11,6 +11,8 @@ export { PriceHistory } from './lib/cars/models/price-history';
 export { CarDto } from './lib/cars/models/carDto';
 export { EditCarDto } from './lib/cars/models/edit-car-dto';
 export { BaseCar } from './lib/cars/models/base-car';
+export { PriceFilter } from './lib/cars/models/price-filter';
+export { CarsFilter } from './lib/cars/models/cars-filter';
 export { CarsService } from './lib/cars/cars.service';
 export { Color } from './lib/colors/color';
 export { ColorsService } from './lib/colors/colors.service';
