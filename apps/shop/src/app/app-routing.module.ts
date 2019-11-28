@@ -8,7 +8,7 @@ const routes: Routes = [
     loadChildren: './catalog/catalog.module#CatalogModule'
   },
   { path: 'car/:carId', component: CarEditComponent },
-  { path: '**', redirectTo: 'catalog', pathMatch: 'full' }
+  { path: '**', redirectTo: 'catalog/cars', pathMatch: 'full' }
 ];
 
 @NgModule({
