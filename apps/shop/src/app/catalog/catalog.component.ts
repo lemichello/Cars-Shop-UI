@@ -13,7 +13,7 @@ export class CatalogComponent implements OnInit {
   @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
   carsComponent: CarsComponent;
 
-  constructor(private router: Router) {
+  constructor(public router: Router) {
     router.events.subscribe(val => {
       if (val instanceof NavigationStart) {
         this.sidenav.opened = false;
