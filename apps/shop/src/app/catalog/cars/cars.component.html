@@ -8,7 +8,7 @@
   </div>
   <cars-shop-ui-cars-list
     [cols]="colsNumber"
-    [cars]="cars"
+    [cars]="cars | async"
     (selectedCar)="navigateToCar($event)"
   ></cars-shop-ui-cars-list>
 </div>

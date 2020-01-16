@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CarsService, Car, CarsFilter } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 const DEFAULT_FILTER: CarsFilter = {
   modelsId: [],
@@ -24,7 +26,7 @@ export class CarsComponent implements OnInit {
   paginationLength: number;
   currentIndex: number;
   currentSize: number;
-  cars: Car[];
+  cars: Observable<Car[]>;
   currentFilter: CarsFilter;
 
   constructor(private carsService: CarsService, private router: Router) {
@@ -32,12 +34,16 @@ export class CarsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.carsService.getAll(0, this.colsNumber * 5).subscribe(res => {
-      this.cars = res;
-      this.carsService.getCount().subscribe(count => {
-        this.paginationLength = count;
-      });
-    });
+    this.cars = this.carsService
+      .getCars(0, this.colsNumber * 5)
+      .pipe(
+        map(({ data }) => data.cars),
+        tap(() => {
+          this.carsService.getCount().subscribe(count => {
+            this.paginationLength = count.data.carsCount;
+          });
+        })
+      );
   }
 
   paginateCars(paginationData: PaginationOutput): void {
@@ -45,15 +51,9 @@ export class CarsComponent implements OnInit {
     this.currentIndex = paginationData.pageIndex;
     this.currentSize = paginationData.pageSize;
 
-    this.carsService
-      .getFilteredCars(
-        paginationData.pageIndex,
-        paginationData.pageSize,
-        this.currentFilter
-      )
-      .subscribe(res => {
-        this.cars = res;
-      });
+    this.cars = this.carsService
+      .getCars(this.currentIndex, this.currentSize, this.currentFilter)
+      .pipe(map(({ data }) => data.cars));
   }
 
   navigateToCar(carId: number): void {
@@ -74,11 +74,11 @@ export class CarsComponent implements OnInit {
     this.currentIndex = 0;
     this.currentSize = this.colsNumber * 5;
 
-    this.carsService
-      .getFilteredCars(this.currentIndex, this.currentSize, filter)
-      .subscribe(res => {
-        this.cars = res;
-        this.paginationLength = this.cars.length;
-      });
+    this.cars = this.carsService
+      .getCars(this.currentIndex, this.currentSize, filter)
+      .pipe(
+        map(({ data }) => data.cars),
+        tap(({ data }) => (this.paginationLength = data.models.length))
+      );
   }
 }

@@ -27,9 +27,9 @@ export class ModelsComponent implements OnInit {
     this.modelsService
       .getByVendor(this.vendorId, 0, this.colsNumber * 5)
       .subscribe(res => {
-        this.models = res;
+        this.models = res.data.models;
         this.modelsService.getCount().subscribe(count => {
-          this.paginationLength = count;
+          this.paginationLength = count.data.modelsCount;
         });
       });
   }
@@ -44,7 +44,7 @@ export class ModelsComponent implements OnInit {
         paginationData.pageSize
       )
       .subscribe(res => {
-        this.models = res;
+        this.models = res.data.models;
       });
   }
 }

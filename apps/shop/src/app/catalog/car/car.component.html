@@ -1,7 +1,7 @@
 <mat-card class="car-card">
   <mat-card-header>
     <mat-card-title>
-      <h1>{{ car?.vendor }} {{ car?.model }}</h1>
+      <h1>{{ car?.vendor.name }} {{ car?.model.name }}</h1>
     </mat-card-title>
   </mat-card-header>
   <mat-card-content>
@@ -29,7 +29,8 @@
         </button>
       </div>
     </div>
-    <h2>Color: {{ this.car?.color }}</h2>
+    <h2>Color: {{ this.car?.color.name }}</h2>
+    <h2>Engine volume: {{this.car?.engineVolume.volume}}</h2>
     <h4 *ngIf="car?.description">Description: {{ this.car?.description }}</h4>
   </mat-card-content>
   <mat-card-actions>

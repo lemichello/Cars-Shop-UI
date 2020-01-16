@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {
+  Car,
   CarsService,
   Color,
   ColorsService,
-  EditCarDto,
   EngineVolume,
   EngineVolumesService,
   Model,
@@ -16,6 +16,7 @@ import { MatDialog, MatSnackBar } from '@angular/material';
 import { InputDialogComponent } from './input-dialog/input-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map} from 'rxjs/operators';
 
 @Component({
   selector: 'cars-shop-ui-car-edit',
@@ -24,7 +25,7 @@ import { Observable } from 'rxjs';
 })
 export class CarEditComponent implements OnInit {
   carId?: number;
-  car?: EditCarDto;
+  car?: Car;
 
   vendors: Observable<Vendor[]>;
   models: Observable<Model[]>;
@@ -76,8 +77,8 @@ export class CarEditComponent implements OnInit {
   }
 
   initializeCar(): void {
-    this.carsService.getSimplified(this.carId).subscribe(res => {
-      this.car = res;
+    this.carsService.getCarForEdit(this.carId).subscribe(res => {
+      this.car = res.data.car;
       this.selectFieldsOfCar();
     });
   }
@@ -92,24 +93,24 @@ export class CarEditComponent implements OnInit {
 
       this.models.subscribe(models => {
         this.carFormGroup.controls['models'].setValue(
-          models.find(x => x.id === this.car.modelId).id
+          models.find(x => x.id === this.car.model.id).id
         );
-        this.selectedModelId = this.car.modelId;
+        this.selectedModelId = this.car.model.id;
       });
     });
 
     this.engineVolumes.subscribe(res => {
       this.carFormGroup.controls['engineVolumes'].setValue(
-        res.find(x => x.id === this.car.engineVolumeId).id
+        res.find(x => x.id === this.car.engineVolume.id).id
       );
-      this.selectedEngineVolumeId = this.car.engineVolumeId;
+      this.selectedEngineVolumeId = this.car.engineVolume.id;
     });
 
     this.colors.subscribe(res => {
       this.carFormGroup.controls['colors'].setValue(
-        res.find(x => x.id === this.car.colorId).id
+        res.find(x => x.id === this.car.color.id).id
       );
-      this.selectedColorId = this.car.colorId;
+      this.selectedColorId = this.car.color.id;
     });
 
     this.description = this.car.description;
@@ -117,19 +118,27 @@ export class CarEditComponent implements OnInit {
   }
 
   refreshVendors(): void {
-    this.vendors = this.vendorsService.getAll();
+    this.vendors = this.vendorsService
+      .getAll(undefined, undefined)
+      .pipe(map(({ data }) => data.vendors));
   }
 
   refreshColors(): void {
-    this.colors = this.colorsService.getAll();
+    this.colors = this.colorsService
+      .getAll()
+      .pipe(map(({ data }) => data.colors));
   }
 
   refreshEngineVolumes(): void {
-    this.engineVolumes = this.engineVolumesService.getAll();
+    this.engineVolumes = this.engineVolumesService
+      .getAll()
+      .pipe(map(({ data }) => data.engineVolumes));
   }
 
   refreshModels(vendorId: number): void {
-    this.models = this.modelsService.getByVendor(vendorId);
+    this.models = this.modelsService
+      .getByVendor(vendorId, undefined, undefined)
+      .pipe(map(({ data }) => data.models));
   }
 
   initializeCollections(): void {
@@ -207,6 +216,10 @@ export class CarEditComponent implements OnInit {
   }
 
   addEngineVolume(engineVolume: string): void {
+    if (engineVolume === undefined) {
+      return;
+    }
+
     const engineVolumeValue = Number(engineVolume);
 
     if (Number.isNaN(engineVolumeValue)) {
@@ -233,8 +246,9 @@ export class CarEditComponent implements OnInit {
         modelId: this.selectedModelId,
         colorId: this.selectedColorId,
         engineVolumeId: this.selectedEngineVolumeId,
-        description: this.description,
-        price: this.price
+        description: this.description || null,
+        price: this.price,
+        id: 0
       })
       .subscribe(() => {
         this.openSnackBar('Successfully added', 'OK');
@@ -250,8 +264,7 @@ export class CarEditComponent implements OnInit {
         engineVolumeId: this.selectedEngineVolumeId,
         colorId: this.selectedColorId,
         description: this.description,
-        price: this.price,
-        model: null
+        price: this.price
       })
       .subscribe(() => {
         this.openSnackBar('Successfully updated', 'OK');
@@ -260,7 +273,7 @@ export class CarEditComponent implements OnInit {
   }
 
   cancelEdit() {
-    if(this.carId) {
+    if (this.carId) {
       this.router.navigate(['catalog/car', this.carId]);
     } else {
       this.router.navigate(['catalog/cars']);

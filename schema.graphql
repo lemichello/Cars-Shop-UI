@@ -1,0 +1,113 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Car {
+  color: Color!
+  description: String
+  engineVolume: EngineVolume!
+  id: Int!
+  model: Model!
+  price: Float!
+  pricesHistory: [PriceHistory]!
+  vendor: Vendor!
+}
+
+type Color {
+  id: Int!
+  name: String!
+}
+
+type EngineVolume {
+  id: Int!
+  volume: Float!
+}
+
+type Model {
+  id: Int!
+  name: String!
+  vendorId: Int!
+}
+
+type Mutation {
+  _empty: String
+  addCar(input: NewCar!): Car!
+  addColor(input: NewColorInput!): Color!
+  addEngineVolume(input: NewEngineVolume!): EngineVolume!
+  addModel(input: NewModel!): Model!
+  addVendor(input: NewVendor!): Vendor!
+  updateCar(input: NewCar!): Car!
+}
+
+type PriceHistory {
+  date: String!
+  id: Int!
+  price: Float!
+}
+
+type Query {
+  _empty: String
+  car(id: Int!): Car
+  cars(filter: CarsFilterInput, pagination: PaginationInput): [Car]!
+  carsCount: Int!
+  colors: [Color]!
+  engineVolumes: [EngineVolume]!
+  minMaxPrices: [Float]!
+  models(pagination: PaginationInput, vendorId: Int!): [Model]!
+  modelsCount: Int!
+  vendors(pagination: PaginationInput): [Vendor]!
+  vendorsCount: Int!
+}
+
+type Vendor {
+  id: Int!
+  models: [Model]!
+  name: String!
+}
+
+input CarsFilterInput {
+  colorId: Int
+  engineVolumeId: Int
+  modelsId: [Int]!
+  price: PriceFilterInput
+}
+
+input NewCar {
+  colorId: Int!
+  description: String
+  engineVolumeId: Int!
+  id: Int!
+  modelId: Int!
+  price: Float!
+}
+
+input NewColorInput {
+  name: String!
+}
+
+input NewEngineVolume {
+  volume: Float!
+}
+
+input NewModel {
+  name: String!
+  vendorId: Int!
+}
+
+input NewVendor {
+  name: String!
+}
+
+input PaginationInput {
+  index: Int!
+  size: Int!
+}
+
+input PriceFilterInput {
+  fromPrice: Float!
+  selectedDate: String
+  toPrice: Float!
+}

@@ -1,34 +1,71 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AppSettings } from '../app-settings';
-import { Model } from './model';
-import { ParamsService } from '../params/params.service';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { isUndefined } from 'util';
+import { ApolloQueryResult } from 'apollo-client';
+
+const MODELS = gql`
+  query Models($vendorId: Int!, $pagination: PaginationInput) {
+    models(vendorId: $vendorId, pagination: $pagination) {
+      id
+      name
+      vendorId
+    }
+  }
+`;
+
+const MODELS_COUNT = gql`
+  query ModelsCount {
+    modelsCount
+  }
+`;
+
+const ADD_MODEL = gql`
+  mutation AddModel($newModel: NewModel!) {
+    addModel(input: $newModel) {
+      id
+      name
+      vendorId
+    }
+  }
+`;
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModelsService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private apollo: Apollo) {}
 
   getByVendor(
     vendorId: number,
     index?: number,
     size?: number
-  ): Observable<Model[]> {
-    return this.httpClient.get<Model[]>(
-      `${AppSettings.BASE_ADDRESS}/models/${vendorId}`,
-      { params: ParamsService.getPaginationParams(index, size) }
-    );
+  ): Observable<ApolloQueryResult<any>> {
+    const pagination =
+      isUndefined(index) || isUndefined(size) ? null : { index, size };
+
+    return this.apollo.watchQuery({
+      query: MODELS,
+      variables: { vendorId, pagination }
+    }).valueChanges;
   }
 
-  add(model: { name: string; vendorId: number }): Observable<Object> {
-    return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/models`, model);
+  add(model: { name: string; vendorId: number }): Observable<any> {
+    return this.apollo.mutate({
+      mutation: ADD_MODEL,
+      variables: { newModel: { name: model.name, vendorId: model.vendorId } },
+      refetchQueries: [
+        {
+          query: MODELS,
+          variables: { vendorId: model.vendorId, pagination: null }
+        }
+      ]
+    });
   }
 
-  getCount(): Observable<number> {
-    return this.httpClient.get<number>(
-      `${AppSettings.BASE_ADDRESS}/models/count`
-    );
+  getCount(): Observable<ApolloQueryResult<any>> {
+    return this.apollo.query({ query: MODELS_COUNT });
   }
 }

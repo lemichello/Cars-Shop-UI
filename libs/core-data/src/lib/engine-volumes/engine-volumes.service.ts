@@ -1,24 +1,42 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AppSettings } from '../app-settings';
-import { EngineVolume } from './engine-volume';
+import { Apollo } from 'apollo-angular';
+import gql from 'graphql-tag';
+import { ApolloQueryResult } from 'apollo-client';
+
+const ENGINE_VOLUMES = gql`
+  query EngineVolumes {
+    engineVolumes {
+      id
+      volume
+    }
+  }
+`;
+
+const ADD_ENGINE_VOLUME = gql`
+  mutation AddEngineVolume($newEngineVolume: NewEngineVolume!) {
+    addEngineVolume(input: $newEngineVolume) {
+      id
+      volume
+    }
+  }
+`;
 
 @Injectable({
   providedIn: 'root'
 })
 export class EngineVolumesService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private apollo: Apollo) {}
 
-  getAll(): Observable<EngineVolume[]> {
-    return this.httpClient.get<EngineVolume[]>(
-      `${AppSettings.BASE_ADDRESS}/enginevolumes`
-    );
+  getAll(): Observable<ApolloQueryResult<any>> {
+    return this.apollo.watchQuery({ query: ENGINE_VOLUMES }).valueChanges;
   }
 
-  add(engineVolumeValue: number): Observable<Object> {
-    return this.httpClient.post(`${AppSettings.BASE_ADDRESS}/enginevolumes`, {
-      volume: engineVolumeValue
+  add(engineVolumeValue: number): Observable<any> {
+    return this.apollo.mutate({
+      mutation: ADD_ENGINE_VOLUME,
+      variables: { newEngineVolume: { volume: engineVolumeValue } },
+      refetchQueries: [{ query: ENGINE_VOLUMES }]
     });
   }
 }

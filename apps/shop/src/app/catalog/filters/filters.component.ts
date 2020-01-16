@@ -80,11 +80,11 @@ export class FiltersComponent implements OnInit {
 
   ngOnInit() {
     this._vendorsService.getDetailed().subscribe(res => {
-      this.dataSource.data = res;
+      this.dataSource.data = res.data.vendors;
     });
 
     this._colorsService.getAll().subscribe(res => {
-      this.colorsOptions = res;
+      this.colorsOptions = res.data.colors;
 
       this.colorsFilteredOptions = this.colorsFormControl.valueChanges.pipe(
         startWith(''),
@@ -93,7 +93,7 @@ export class FiltersComponent implements OnInit {
     });
 
     this._engineVolumesService.getAll().subscribe(res => {
-      this.engineVolumesOptions = res;
+      this.engineVolumesOptions = res.data.engineVolumes;
 
       this.engineVolumesFilteredOptions = this.engineVolumesFormControl.valueChanges.pipe(
         startWith(''),
@@ -104,8 +104,8 @@ export class FiltersComponent implements OnInit {
     });
 
     this._carsService.getMinMaxPrices().subscribe(res => {
-      this.minPrice = res[0];
-      this.maxPrice = res[1];
+      this.minPrice = res.data.minMaxPrices[0];
+      this.maxPrice = res.data.minMaxPrices[1];
 
       this.toPrice = this.maxPrice;
       this.fromPrice = this.minPrice;

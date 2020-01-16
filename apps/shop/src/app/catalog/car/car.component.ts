@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CarsService, DetailedCar } from '@cars-shop-ui/core-data';
+import { Car, CarsService} from '@cars-shop-ui/core-data';
 
 @Component({
   selector: 'cars-shop-ui-car',
@@ -9,7 +9,7 @@ import { CarsService, DetailedCar } from '@cars-shop-ui/core-data';
 })
 export class CarComponent implements OnInit {
   carId: number;
-  car: DetailedCar;
+  car: Car;
   priceHistoryIndex: number;
 
   constructor(
@@ -25,7 +25,8 @@ export class CarComponent implements OnInit {
 
     this.carsService.getById(this.carId).subscribe(
       res => {
-        this.car = res.body;
+        console.log(res);
+        this.car = res.data.car;
         this.priceHistoryIndex = this.car.pricesHistory.length - 1;
       },
       () => {
