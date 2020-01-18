@@ -57,7 +57,7 @@ type Query {
   engineVolumes: [EngineVolume]!
   minMaxPrices: [Float]!
   models(pagination: PaginationInput, vendorId: Int!): [Model]!
-  modelsCount: Int!
+  modelsCount(vendorId: Int!): Int!
   vendors(pagination: PaginationInput): [Vendor]!
   vendorsCount: Int!
 }

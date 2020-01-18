@@ -17,8 +17,8 @@ const MODELS = gql`
 `;
 
 const MODELS_COUNT = gql`
-  query ModelsCount {
-    modelsCount
+  query ModelsCount($vendorId: Int!) {
+    modelsCount(vendorId: $vendorId)
   }
 `;
 
@@ -61,9 +61,10 @@ export class ModelsService {
     });
   }
 
-  getCount(): Observable<ApolloQueryResult<any>> {
+  getCount(vendorId: number): Observable<ApolloQueryResult<any>> {
     return this.apollo.watchQuery({
       query: MODELS_COUNT,
+      variables: { vendorId },
       fetchPolicy: 'no-cache'
     }).valueChanges;
   }
