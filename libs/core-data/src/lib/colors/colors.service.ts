@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -26,7 +25,7 @@ const ADD_COLOR = gql`
   providedIn: 'root'
 })
 export class ColorsService {
-  constructor(private httpClient: HttpClient, private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {}
 
   getAll(): Observable<any> {
     return this.apollo.watchQuery({ query: COLORS }).valueChanges;
@@ -36,7 +35,7 @@ export class ColorsService {
     return this.apollo.mutate({
       mutation: ADD_COLOR,
       variables: { newColor: { name: color } },
-      refetchQueries: [{ query: COLORS }]
+      refetchQueries: ['Colors']
     });
   }
 }

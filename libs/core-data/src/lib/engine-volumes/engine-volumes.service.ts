@@ -29,14 +29,17 @@ export class EngineVolumesService {
   constructor(private apollo: Apollo) {}
 
   getAll(): Observable<ApolloQueryResult<any>> {
-    return this.apollo.watchQuery({ query: ENGINE_VOLUMES }).valueChanges;
+    return this.apollo.watchQuery({
+      query: ENGINE_VOLUMES,
+      fetchPolicy: 'no-cache'
+    }).valueChanges;
   }
 
   add(engineVolumeValue: number): Observable<any> {
     return this.apollo.mutate({
       mutation: ADD_ENGINE_VOLUME,
       variables: { newEngineVolume: { volume: engineVolumeValue } },
-      refetchQueries: [{ query: ENGINE_VOLUMES }]
+      refetchQueries: ['EngineVolumes']
     });
   }
 }

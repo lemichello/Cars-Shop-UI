@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
@@ -48,29 +47,35 @@ const ADD_VENDOR = gql`
   providedIn: 'root'
 })
 export class VendorsService {
-  constructor(private httpClient: HttpClient, private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {}
 
   getAll(index?: number, size?: number): Observable<any> {
     const pagination =
       isUndefined(index) || isUndefined(size) ? null : { index, size };
 
-    return this.apollo.watchQuery({ query: VENDORS, variables: { pagination } })
-      .valueChanges;
+    return this.apollo.watchQuery({
+      query: VENDORS,
+      variables: { pagination },
+      fetchPolicy: 'no-cache'
+    }).valueChanges;
   }
 
   add(vendorName: string): Observable<Object> {
     return this.apollo.mutate({
       mutation: ADD_VENDOR,
       variables: { newVendor: { name: vendorName } },
-      refetchQueries: [{ query: VENDORS, variables: { pagination: null } }]
+      refetchQueries: ['DetailedVendors']
     });
   }
 
   getCount(): Observable<ApolloQueryResult<any>> {
-    return this.apollo.query({ query: VENDORS_COUNT });
+    return this.apollo.watchQuery({
+      query: VENDORS_COUNT,
+      fetchPolicy: 'no-cache'
+    }).valueChanges;
   }
 
   getDetailed(): Observable<ApolloQueryResult<any>> {
-    return this.apollo.query({ query: DETAILED_VENDORS });
+    return this.apollo.watchQuery({ query: DETAILED_VENDORS }).valueChanges;
   }
 }

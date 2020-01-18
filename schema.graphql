@@ -52,7 +52,7 @@ type Query {
   _empty: String
   car(id: Int!): Car
   cars(filter: CarsFilterInput, pagination: PaginationInput): [Car]!
-  carsCount: Int!
+  carsCount(filter: CarsFilterInput): Int!
   colors: [Color]!
   engineVolumes: [EngineVolume]!
   minMaxPrices: [Float]!

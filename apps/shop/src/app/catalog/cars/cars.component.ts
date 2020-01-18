@@ -34,16 +34,14 @@ export class CarsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.currentSize = this.colsNumber * 5;
     this.cars = this.carsService
-      .getCars(0, this.colsNumber * 5)
-      .pipe(
-        map(({ data }) => data.cars),
-        tap(() => {
-          this.carsService.getCount().subscribe(count => {
-            this.paginationLength = count.data.carsCount;
-          });
-        })
-      );
+      .getCars(0, this.currentSize)
+      .pipe(map(({ data }) => data.cars));
+
+    this.carsService.getCount().subscribe(count => {
+      this.paginationLength = count.data.carsCount;
+    });
   }
 
   paginateCars(paginationData: PaginationOutput): void {
@@ -63,22 +61,25 @@ export class CarsComponent implements OnInit {
   resetFilters(): void {
     this.currentFilter = DEFAULT_FILTER;
     this.paginateCars({
-      pageSize: this.colsNumber * 5,
+      pageSize: this.currentSize,
       pageIndex: 0,
       colsNumber: this.colsNumber
     });
+    this.carsService
+      .getCount()
+      .subscribe(res => (this.paginationLength = res.data.carsCount));
   }
 
   filterCars(filter: CarsFilter): void {
     this.currentFilter = filter;
     this.currentIndex = 0;
-    this.currentSize = this.colsNumber * 5;
 
     this.cars = this.carsService
       .getCars(this.currentIndex, this.currentSize, filter)
-      .pipe(
-        map(({ data }) => data.cars),
-        tap(({ data }) => (this.paginationLength = data.models.length))
-      );
+      .pipe(map(({ data }) => data.cars));
+
+    this.carsService
+      .getCount(filter)
+      .subscribe(res => (this.paginationLength = res.data.carsCount));
   }
 }

@@ -36,7 +36,7 @@ const ADD_MODEL = gql`
   providedIn: 'root'
 })
 export class ModelsService {
-  constructor(private httpClient: HttpClient, private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {}
 
   getByVendor(
     vendorId: number,
@@ -48,7 +48,8 @@ export class ModelsService {
 
     return this.apollo.watchQuery({
       query: MODELS,
-      variables: { vendorId, pagination }
+      variables: { vendorId, pagination },
+      fetchPolicy: 'no-cache'
     }).valueChanges;
   }
 
@@ -56,16 +57,14 @@ export class ModelsService {
     return this.apollo.mutate({
       mutation: ADD_MODEL,
       variables: { newModel: { name: model.name, vendorId: model.vendorId } },
-      refetchQueries: [
-        {
-          query: MODELS,
-          variables: { vendorId: model.vendorId, pagination: null }
-        }
-      ]
+      refetchQueries: ['DetailedVendors']
     });
   }
 
   getCount(): Observable<ApolloQueryResult<any>> {
-    return this.apollo.query({ query: MODELS_COUNT });
+    return this.apollo.watchQuery({
+      query: MODELS_COUNT,
+      fetchPolicy: 'no-cache'
+    }).valueChanges;
   }
 }

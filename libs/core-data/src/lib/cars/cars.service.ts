@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EditCarDto } from './models/edit-car-dto';
 import { CarsFilter } from './models/cars-filter';
@@ -84,8 +83,8 @@ const CAR = gql`
 `;
 
 const CARS_COUNT = gql`
-  query CarsCount {
-    carsCount
+  query CarsCount($filter: CarsFilterInput) {
+    carsCount(filter: $filter)
   }
 `;
 
@@ -155,7 +154,7 @@ const UPDATE_CAR = gql`
   providedIn: 'root'
 })
 export class CarsService {
-  constructor(private httpClient: HttpClient, private apollo: Apollo) {}
+  constructor(private apollo: Apollo) {}
 
   getCars(
     index: number,
@@ -166,39 +165,51 @@ export class CarsService {
 
     return this.apollo.watchQuery({
       query: CARS,
-      variables: { pagination, filter }
+      variables: { pagination, filter },
+      fetchPolicy: 'no-cache'
     }).valueChanges;
   }
 
   getCarForEdit(carId: number): Observable<ApolloQueryResult<any>> {
-    return this.apollo.query({ query: CAR_FOR_EDIT, variables: { carId } });
+    return this.apollo.watchQuery({
+      query: CAR_FOR_EDIT,
+      variables: { carId },
+      fetchPolicy: 'no-cache'
+    }).valueChanges;
   }
 
   add(car: EditCarDto): Observable<any> {
     return this.apollo.mutate({
       mutation: ADD_CAR,
       variables: { newCar: { ...car } },
-      refetchQueries: [{ query: CARS }]
+      refetchQueries: ['MinMaxPrices']
     });
   }
 
   update(car: EditCarDto): Observable<Object> {
     return this.apollo.mutate({
       mutation: UPDATE_CAR,
-      variables: { updatingCar: { ...car } },
-      refetchQueries: [{ query: CAR, variables: { carId: car.id } }]
+      variables: { updatingCar: { ...car } }
     });
   }
 
-  getCount(): Observable<any> {
-    return this.apollo.query({ query: CARS_COUNT });
+  getCount(filter?: CarsFilter): Observable<any> {
+    return this.apollo.watchQuery({
+      query: CARS_COUNT,
+      variables: { filter },
+      fetchPolicy: 'no-cache'
+    }).valueChanges;
   }
 
   getById(carId: number): Observable<ApolloQueryResult<any>> {
-    return this.apollo.query({ query: CAR, variables: { carId } });
+    return this.apollo.watchQuery({
+      query: CAR,
+      variables: { carId },
+      fetchPolicy: 'no-cache'
+    }).valueChanges;
   }
 
   getMinMaxPrices(): Observable<ApolloQueryResult<any>> {
-    return this.apollo.query({ query: MIN_MAX_PRICES });
+    return this.apollo.watchQuery({ query: MIN_MAX_PRICES }).valueChanges;
   }
 }

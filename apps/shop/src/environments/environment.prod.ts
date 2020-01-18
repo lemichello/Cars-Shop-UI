@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://cars-shop-api.herokuapp.com/api'
+  apiUrl: 'https://cars-shop-graphql.herokuapp.com/'
 };
