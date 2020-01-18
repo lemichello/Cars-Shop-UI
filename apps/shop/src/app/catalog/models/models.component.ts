@@ -28,7 +28,7 @@ export class ModelsComponent implements OnInit {
       .getByVendor(this.vendorId, 0, this.colsNumber * 5)
       .subscribe(res => {
         this.models = res.data.models;
-        this.modelsService.getCount().subscribe(count => {
+        this.modelsService.getCount(this.vendorId).subscribe(count => {
           this.paginationLength = count.data.modelsCount;
         });
       });
