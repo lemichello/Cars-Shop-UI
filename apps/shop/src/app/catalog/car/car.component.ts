@@ -25,7 +25,6 @@ export class CarComponent implements OnInit {
 
     this.carsService.getById(this.carId).subscribe(
       res => {
-        console.log(res);
         this.car = res.data.car;
         this.priceHistoryIndex = this.car.pricesHistory.length - 1;
       },
