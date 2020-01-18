@@ -5,9 +5,10 @@ import { VendorsService } from './vendors/vendors.service';
 import { LoaderComponent } from './loader/loader.component';
 import { MaterialModule } from '@cars-shop-ui/material';
 import { LoaderInterceptor } from './loader/loader.interceptor';
+import { GraphQLModule } from './graphql.module';
 
 @NgModule({
-  imports: [CommonModule, HttpClientModule, MaterialModule],
+  imports: [CommonModule, HttpClientModule, MaterialModule, GraphQLModule],
   providers: [
     VendorsService,
     VendorsService,

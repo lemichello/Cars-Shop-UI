@@ -1,7 +1,17 @@
 {
   "extends": "../../tslint.json",
   "rules": {
-    "directive-selector": [true, "attribute", "carsShopUi", "camelCase"],
-    "component-selector": [true, "element", "cars-shop-ui", "kebab-case"]
+    "directive-selector": [
+      true,
+      "attribute",
+      "carsShopUi",
+      "camelCase"
+    ],
+    "component-selector": [
+      true,
+      "element",
+      "cars-shop-ui",
+      "kebab-case"
+    ]
   }
 }

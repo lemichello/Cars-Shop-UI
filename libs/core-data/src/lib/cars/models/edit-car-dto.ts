@@ -1,6 +1,8 @@
-import { CarDto, Model } from '@cars-shop-ui/core-data';
-
-export interface EditCarDto extends CarDto{
+export interface EditCarDto {
   id: number;
-  model: Model;
+  description: string;
+  modelId: number;
+  colorId: number;
+  engineVolumeId: number;
+  price: number;
 }

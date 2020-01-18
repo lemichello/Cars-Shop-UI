@@ -1,5 +1,12 @@
-import { BaseCar } from './base-car';
+import { Color, EngineVolume, Model, PriceHistory, Vendor } from '../../..';
 
-export interface Car extends BaseCar {
+export interface Car {
+  id: number;
+  description: string;
+  model: Model;
+  vendor: Vendor;
+  color: Color;
+  engineVolume: EngineVolume;
+  pricesHistory: PriceHistory[];
   price: number;
 }

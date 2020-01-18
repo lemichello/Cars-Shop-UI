@@ -9,9 +9,9 @@
         >
           <mat-card-content>
             <h1 class="car-tile-btn-container__header">
-              {{ car.vendor }} {{ car.model }}
+              {{ car.vendor.name }} {{ car.model.name }}
             </h1>
-            <h3>Color: {{ car.color }}</h3>
+            <h3>Color: {{ car.color.name }}</h3>
             <h2>{{ car.price | currency }}</h2>
           </mat-card-content>
         </button>

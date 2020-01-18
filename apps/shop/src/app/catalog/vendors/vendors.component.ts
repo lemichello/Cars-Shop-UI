@@ -17,9 +17,9 @@ export class VendorsComponent implements OnInit {
 
   ngOnInit() {
     this.vendorsService.getAll(0, this.colsNumber * 5).subscribe(res => {
-      this.vendors = res;
+      this.vendors = res.data.vendors;
       this.vendorsService.getCount().subscribe(count => {
-        this.paginationLength = count;
+        this.paginationLength = count.data.vendorsCount;
       });
     });
   }
@@ -30,7 +30,7 @@ export class VendorsComponent implements OnInit {
     this.vendorsService
       .getAll(paginationData.pageIndex, paginationData.pageSize)
       .subscribe(res => {
-        this.vendors = res;
+        this.vendors = res.data.vendors;
       });
   }
 

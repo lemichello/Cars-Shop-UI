@@ -12,6 +12,7 @@ import { CarEditComponent } from './car-edit/car-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
 import { InputDialogComponent } from './car-edit/input-dialog/input-dialog.component';
+import { ApolloModule } from 'apollo-angular';
 
 @NgModule({
   declarations: [AppComponent, CarEditComponent, InputDialogComponent],
@@ -25,7 +26,8 @@ import { InputDialogComponent } from './car-edit/input-dialog/input-dialog.compo
     CoreDataModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    MatDialogModule
+    MatDialogModule,
+    ApolloModule
   ],
   providers: [],
   bootstrap: [AppComponent]

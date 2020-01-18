@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CarsService, Car, CarsFilter } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 const DEFAULT_FILTER: CarsFilter = {
   modelsId: [],
@@ -24,7 +26,7 @@ export class CarsComponent implements OnInit {
   paginationLength: number;
   currentIndex: number;
   currentSize: number;
-  cars: Car[];
+  cars: Observable<Car[]>;
   currentFilter: CarsFilter;
 
   constructor(private carsService: CarsService, private router: Router) {
@@ -32,11 +34,13 @@ export class CarsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.carsService.getAll(0, this.colsNumber * 5).subscribe(res => {
-      this.cars = res;
-      this.carsService.getCount().subscribe(count => {
-        this.paginationLength = count;
-      });
+    this.currentSize = this.colsNumber * 5;
+    this.cars = this.carsService
+      .getCars(0, this.currentSize)
+      .pipe(map(({ data }) => data.cars));
+
+    this.carsService.getCount().subscribe(count => {
+      this.paginationLength = count.data.carsCount;
     });
   }
 
@@ -45,15 +49,9 @@ export class CarsComponent implements OnInit {
     this.currentIndex = paginationData.pageIndex;
     this.currentSize = paginationData.pageSize;
 
-    this.carsService
-      .getFilteredCars(
-        paginationData.pageIndex,
-        paginationData.pageSize,
-        this.currentFilter
-      )
-      .subscribe(res => {
-        this.cars = res;
-      });
+    this.cars = this.carsService
+      .getCars(this.currentIndex, this.currentSize, this.currentFilter)
+      .pipe(map(({ data }) => data.cars));
   }
 
   navigateToCar(carId: number): void {
@@ -63,22 +61,25 @@ export class CarsComponent implements OnInit {
   resetFilters(): void {
     this.currentFilter = DEFAULT_FILTER;
     this.paginateCars({
-      pageSize: this.colsNumber * 5,
+      pageSize: this.currentSize,
       pageIndex: 0,
       colsNumber: this.colsNumber
     });
+    this.carsService
+      .getCount()
+      .subscribe(res => (this.paginationLength = res.data.carsCount));
   }
 
   filterCars(filter: CarsFilter): void {
     this.currentFilter = filter;
     this.currentIndex = 0;
-    this.currentSize = this.colsNumber * 5;
+
+    this.cars = this.carsService
+      .getCars(this.currentIndex, this.currentSize, filter)
+      .pipe(map(({ data }) => data.cars));
 
     this.carsService
-      .getFilteredCars(this.currentIndex, this.currentSize, filter)
-      .subscribe(res => {
-        this.cars = res;
-        this.paginationLength = this.cars.length;
-      });
+      .getCount(filter)
+      .subscribe(res => (this.paginationLength = res.data.carsCount));
   }
 }
