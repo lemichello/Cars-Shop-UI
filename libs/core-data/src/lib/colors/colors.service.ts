@@ -3,22 +3,29 @@ import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 
+const COLORS_FIELDS = gql`
+  fragment ColorsFields on Color {
+    id
+    name
+  }
+`;
+
 const COLORS = gql`
   query Colors {
     colors {
-      id
-      name
+      ...ColorsFields
     }
   }
+  ${COLORS_FIELDS}
 `;
 
 const ADD_COLOR = gql`
   mutation AddColor($newColor: NewColorInput!) {
     addColor(input: $newColor) {
-      id
-      name
+      ...ColorsFields
     }
   }
+  ${COLORS_FIELDS}
 `;
 
 @Injectable({

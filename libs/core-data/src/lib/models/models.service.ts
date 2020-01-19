@@ -1,19 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { isUndefined } from 'util';
 import { ApolloQueryResult } from 'apollo-client';
 
+const MODELS_FIELDS = gql`
+  fragment ModelsFields on Model {
+    id
+    name
+    vendorId
+  }
+`;
+
 const MODELS = gql`
   query Models($vendorId: Int!, $pagination: PaginationInput) {
     models(vendorId: $vendorId, pagination: $pagination) {
-      id
-      name
-      vendorId
+      ...ModelsFields
     }
   }
+  ${MODELS_FIELDS}
 `;
 
 const MODELS_COUNT = gql`
@@ -25,11 +31,10 @@ const MODELS_COUNT = gql`
 const ADD_MODEL = gql`
   mutation AddModel($newModel: NewModel!) {
     addModel(input: $newModel) {
-      id
-      name
-      vendorId
+      ...ModelsFields
     }
   }
+  ${MODELS_FIELDS}
 `;
 
 @Injectable({

@@ -4,22 +4,29 @@ import { Apollo } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { ApolloQueryResult } from 'apollo-client';
 
+const ENGINE_VOLUMES_FIELDS = gql`
+  fragment EngineVolumesFields on EngineVolume {
+    id
+    volume
+  }
+`;
+
 const ENGINE_VOLUMES = gql`
   query EngineVolumes {
     engineVolumes {
-      id
-      volume
+      ...EngineVolumesFields
     }
   }
+  ${ENGINE_VOLUMES_FIELDS}
 `;
 
 const ADD_ENGINE_VOLUME = gql`
   mutation AddEngineVolume($newEngineVolume: NewEngineVolume!) {
     addEngineVolume(input: $newEngineVolume) {
-      id
-      volume
+      ...EngineVolumesFields
     }
   }
+  ${ENGINE_VOLUMES_FIELDS}
 `;
 
 @Injectable({
