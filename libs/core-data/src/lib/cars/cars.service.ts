@@ -6,30 +6,65 @@ import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
 import { ApolloQueryResult } from 'apollo-client';
 
+const CARS_FIELDS = gql`
+  fragment CarsFields on Car {
+    id
+    description
+    model {
+      id
+      name
+    }
+    vendor {
+      id
+      name
+    }
+    color {
+      id
+      name
+    }
+    engineVolume {
+      id
+      volume
+    }
+    price
+  }
+`;
+
+const DETAILED_CARS_FIELDS = gql`
+  fragment DetailedCarsFields on Car {
+    id
+    description
+    model {
+      id
+      name
+    }
+    vendor {
+      id
+      name
+    }
+    color {
+      id
+      name
+    }
+    engineVolume {
+      id
+      volume
+    }
+    pricesHistory {
+      id
+      price
+      date
+    }
+  }
+`;
+
 const CARS = gql`
   query Cars($filter: CarsFilterInput, $pagination: PaginationInput) {
     cars(filter: $filter, pagination: $pagination) {
-      id
-      description
-      model {
-        id
-        name
-      }
-      vendor {
-        id
-        name
-      }
-      color {
-        id
-        name
-      }
-      engineVolume {
-        id
-        volume
-      }
-      price
+      ...CarsFields
     }
   }
+  ${CARS_FIELDS}
 `;
 
 const CAR_FOR_EDIT = gql`
@@ -55,31 +90,10 @@ const CAR_FOR_EDIT = gql`
 const CAR = gql`
   query Car($carId: Int!) {
     car(id: $carId) {
-      id
-      description
-      model {
-        id
-        name
-      }
-      vendor {
-        id
-        name
-      }
-      color {
-        id
-        name
-      }
-      engineVolume {
-        id
-        volume
-      }
-      pricesHistory {
-        id
-        price
-        date
-      }
+      ...DetailedCarsFields
     }
   }
+  ${DETAILED_CARS_FIELDS}
 `;
 
 const CARS_COUNT = gql`
@@ -97,57 +111,19 @@ const MIN_MAX_PRICES = gql`
 const ADD_CAR = gql`
   mutation AddCar($newCar: NewCar!) {
     addCar(input: $newCar) {
-      id
-      description
-      model {
-        id
-        name
-      }
-      vendor {
-        id
-        name
-      }
-      color {
-        id
-        name
-      }
-      engineVolume {
-        id
-        volume
-      }
-      price
+      ...CarsFields
     }
   }
+  ${CARS_FIELDS}
 `;
 
 const UPDATE_CAR = gql`
   mutation UpdateCar($updatingCar: NewCar!) {
     updateCar(input: $updatingCar) {
-      id
-      description
-      model {
-        id
-        name
-      }
-      vendor {
-        id
-        name
-      }
-      color {
-        id
-        name
-      }
-      engineVolume {
-        id
-        volume
-      }
-      pricesHistory {
-        id
-        price
-        date
-      }
+      ...DetailedCarsFields
     }
   }
+  ${DETAILED_CARS_FIELDS}
 `;
 
 @Injectable({

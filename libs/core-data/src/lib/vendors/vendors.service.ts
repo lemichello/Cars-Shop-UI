@@ -5,27 +5,41 @@ import gql from 'graphql-tag';
 import { ApolloQueryResult } from 'apollo-client';
 import { isUndefined } from 'util';
 
+const VENDORS_FIELDS = gql`
+  fragment VendorsFields on Vendor {
+    id
+    name
+  }
+`;
+
+const DETAILED_VENDORS_FIELDS = gql`
+  fragment DetailedVendorsFields on Vendor {
+    id
+    name
+    models {
+      id
+      name
+      vendorId
+    }
+  }
+`;
+
 const VENDORS = gql`
   query Vendors($pagination: PaginationInput) {
     vendors(pagination: $pagination) {
-      id
-      name
+      ...VendorsFields
     }
   }
+  ${VENDORS_FIELDS}
 `;
 
 const DETAILED_VENDORS = gql`
   query DetailedVendors($pagination: PaginationInput) {
     vendors(pagination: $pagination) {
-      id
-      name
-      models {
-        id
-        name
-        vendorId
-      }
+      ...DetailedVendorsFields
     }
   }
+  ${DETAILED_VENDORS_FIELDS}
 `;
 
 const VENDORS_COUNT = gql`
@@ -37,9 +51,9 @@ const VENDORS_COUNT = gql`
 const ADD_VENDOR = gql`
   mutation AddVendor($newVendor: NewVendor!) {
     addVendor(input: $newVendor) {
-      id
-      name
+      ...VendorsFields
     }
+    ${VENDORS_FIELDS}
   }
 `;
 
