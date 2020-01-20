@@ -1,6 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import { PaginationOutput } from './pagination-output';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'cars-shop-ui-paginator',
@@ -11,6 +18,7 @@ export class PaginatorComponent implements OnInit {
   @Input() paginationLength: number;
   @Input() colsNumber: number;
   @Output() paginated = new EventEmitter();
+  @ViewChild('paginator', { static: false }) paginator: MatPaginator;
   pageSize: number;
   pageSizeOptions: number[];
   pageIndex = 0;
@@ -20,6 +28,10 @@ export class PaginatorComponent implements OnInit {
   ngOnInit() {
     this.pageSize = this.colsNumber * 5;
     this.refreshPageSizeOptions();
+  }
+
+  goToFirstPage(): void {
+    this.paginator.firstPage();
   }
 
   refreshPageSizeOptions(): void {

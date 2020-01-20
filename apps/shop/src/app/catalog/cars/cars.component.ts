@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CarsService, Car, CarsFilter } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import { PaginatorComponent } from '../paginator/paginator.component';
 
 const DEFAULT_FILTER: CarsFilter = {
   modelsId: [],
@@ -22,6 +23,9 @@ const DEFAULT_FILTER: CarsFilter = {
   styleUrls: ['./cars.component.scss']
 })
 export class CarsComponent implements OnInit {
+  @ViewChild(PaginatorComponent, { static: false })
+  paginatorComponent: PaginatorComponent;
+
   colsNumber = 3;
   paginationLength: number;
   currentIndex: number;
@@ -31,10 +35,11 @@ export class CarsComponent implements OnInit {
 
   constructor(private carsService: CarsService, private router: Router) {
     this.currentFilter = DEFAULT_FILTER;
+    this.currentIndex = 0;
+    this.currentSize = this.colsNumber * 5;
   }
 
   ngOnInit() {
-    this.currentSize = this.colsNumber * 5;
     this.cars = this.carsService
       .getCars(0, this.currentSize)
       .pipe(map(({ data }) => data.cars));
@@ -60,6 +65,7 @@ export class CarsComponent implements OnInit {
 
   resetFilters(): void {
     this.currentFilter = DEFAULT_FILTER;
+
     this.paginateCars({
       pageSize: this.currentSize,
       pageIndex: 0,
@@ -68,6 +74,8 @@ export class CarsComponent implements OnInit {
     this.carsService
       .getCount()
       .subscribe(res => (this.paginationLength = res.data.carsCount));
+
+    this.paginatorComponent.goToFirstPage();
   }
 
   filterCars(filter: CarsFilter): void {
@@ -78,8 +86,9 @@ export class CarsComponent implements OnInit {
       .getCars(this.currentIndex, this.currentSize, filter)
       .pipe(map(({ data }) => data.cars));
 
-    this.carsService
-      .getCount(filter)
-      .subscribe(res => (this.paginationLength = res.data.carsCount));
+    this.carsService.getCount(filter).subscribe(res => {
+      this.paginationLength = res.data.carsCount;
+      this.paginatorComponent.goToFirstPage();
+    });
   }
 }
