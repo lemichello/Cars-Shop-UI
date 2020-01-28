@@ -42,6 +42,15 @@ const DETAILED_VENDORS = gql`
   ${DETAILED_VENDORS_FIELDS}
 `;
 
+const VENDOR_ADDED = gql`
+  subscription VendorAdded {
+    vendorAdded {
+      ...DetailedVendorsFields
+    }
+  }
+  ${DETAILED_VENDORS_FIELDS}
+`;
+
 const VENDORS_COUNT = gql`
   query VendorsCount {
     vendorsCount
@@ -92,4 +101,8 @@ export class VendorsService {
   getDetailed(): Observable<ApolloQueryResult<any>> {
     return this.apollo.watchQuery({ query: DETAILED_VENDORS }).valueChanges;
   }
+
+  // subscribeForNewVendors(): Observable<ApolloQueryResult<any>> {
+
+  // }
 }
