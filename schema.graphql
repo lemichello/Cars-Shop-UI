@@ -3,6 +3,7 @@
 schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 type Car {
@@ -60,6 +61,13 @@ type Query {
   modelsCount(vendorId: Int!): Int!
   vendors(pagination: PaginationInput): [Vendor]!
   vendorsCount: Int!
+}
+
+type Subscription {
+  _empty: String
+  colorAdded: Color!
+  engineVolumeAdded: EngineVolume!
+  vendorAdded: Vendor!
 }
 
 type Vendor {

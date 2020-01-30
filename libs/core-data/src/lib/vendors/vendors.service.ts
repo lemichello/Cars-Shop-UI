@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Apollo } from 'apollo-angular';
+import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
 import { ApolloQueryResult } from 'apollo-client';
 import { isUndefined } from 'util';
@@ -62,15 +62,23 @@ const ADD_VENDOR = gql`
     addVendor(input: $newVendor) {
       ...VendorsFields
     }
-    ${VENDORS_FIELDS}
   }
+  ${VENDORS_FIELDS}
 `;
 
 @Injectable({
   providedIn: 'root'
 })
 export class VendorsService {
-  constructor(private apollo: Apollo) {}
+  detailedVendorsQuery: QueryRef<any>;
+
+  constructor(private apollo: Apollo) {
+    this.detailedVendorsQuery = this.apollo.watchQuery({
+      query: DETAILED_VENDORS
+    });
+
+    this.subscribeForNewVendors();
+  }
 
   getAll(index?: number, size?: number): Observable<any> {
     const pagination =
@@ -86,8 +94,7 @@ export class VendorsService {
   add(vendorName: string): Observable<Object> {
     return this.apollo.mutate({
       mutation: ADD_VENDOR,
-      variables: { newVendor: { name: vendorName } },
-      refetchQueries: ['DetailedVendors']
+      variables: { newVendor: { name: vendorName } }
     });
   }
 
@@ -99,10 +106,34 @@ export class VendorsService {
   }
 
   getDetailed(): Observable<ApolloQueryResult<any>> {
-    return this.apollo.watchQuery({ query: DETAILED_VENDORS }).valueChanges;
+    return this.detailedVendorsQuery.valueChanges;
   }
 
-  // subscribeForNewVendors(): Observable<ApolloQueryResult<any>> {
+  subscribeForNewVendors(): void {
+    this.detailedVendorsQuery.subscribeToMore({
+      document: VENDOR_ADDED,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) {
+          return prev;
+        }
+        const newVendor = subscriptionData.data.vendorAdded;
+        const prevVendor = prev['vendors'].find(
+          element => element.id === newVendor.id
+        );
 
-  // }
+        if (!prevVendor) {
+          return Object.assign({}, prev, {
+            vendors: [...prev['vendors'], newVendor]
+          });
+        }
+
+        // Replacing old vendor with new one.
+        prev['vendors'][prev['vendors'].indexOf(prevVendor)] = newVendor;
+
+        return Object.assign({}, prev, {
+          vendors: [...prev['vendors']]
+        });
+      }
+    });
+  }
 }
