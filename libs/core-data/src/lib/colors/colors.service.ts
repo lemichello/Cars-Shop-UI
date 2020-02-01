@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Apollo } from 'apollo-angular';
+import { Apollo, QueryRef } from 'apollo-angular';
 import gql from 'graphql-tag';
 
 const COLORS_FIELDS = gql`
@@ -13,6 +13,15 @@ const COLORS_FIELDS = gql`
 const COLORS = gql`
   query Colors {
     colors {
+      ...ColorsFields
+    }
+  }
+  ${COLORS_FIELDS}
+`;
+
+const COLOR_ADDED = gql`
+  subscription ColorAdded {
+    colorAdded {
       ...ColorsFields
     }
   }
@@ -32,10 +41,16 @@ const ADD_COLOR = gql`
   providedIn: 'root'
 })
 export class ColorsService {
-  constructor(private apollo: Apollo) {}
+  colorsQuery: QueryRef<any>;
+
+  constructor(private apollo: Apollo) {
+    this.colorsQuery = this.apollo.watchQuery({ query: COLORS });
+
+    this.subscribeForNewColors();
+  }
 
   getAll(): Observable<any> {
-    return this.apollo.watchQuery({ query: COLORS }).valueChanges;
+    return this.colorsQuery.valueChanges;
   }
 
   add(color: string): Observable<any> {
@@ -43,6 +58,23 @@ export class ColorsService {
       mutation: ADD_COLOR,
       variables: { newColor: { name: color } },
       refetchQueries: ['Colors']
+    });
+  }
+
+  subscribeForNewColors(): void {
+    this.colorsQuery.subscribeToMore({
+      document: COLOR_ADDED,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData) {
+          return prev;
+        }
+
+        const newColor = subscriptionData.data.colorAdded;
+
+        return Object.assign({}, prev, {
+          colors: [...prev['colors'], newColor]
+        });
+      }
     });
   }
 }

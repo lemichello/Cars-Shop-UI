@@ -27,6 +27,11 @@ type EngineVolume {
   volume: Float!
 }
 
+type MinMaxPrice {
+  maxPrice: Float!
+  minPrice: Float!
+}
+
 type Model {
   id: Int!
   name: String!
@@ -56,7 +61,7 @@ type Query {
   carsCount(filter: CarsFilterInput): Int!
   colors: [Color]!
   engineVolumes: [EngineVolume]!
-  minMaxPrices: [Float]!
+  minMaxPrices: MinMaxPrice!
   models(pagination: PaginationInput, vendorId: Int!): [Model]!
   modelsCount(vendorId: Int!): Int!
   vendors(pagination: PaginationInput): [Vendor]!
@@ -67,6 +72,7 @@ type Subscription {
   _empty: String
   colorAdded: Color!
   engineVolumeAdded: EngineVolume!
+  minMaxPricesChanged: MinMaxPrice!
   vendorAdded: Vendor!
 }
 

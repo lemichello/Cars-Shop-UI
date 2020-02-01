@@ -104,8 +104,8 @@ export class FiltersComponent implements OnInit {
     });
 
     this._carsService.getMinMaxPrices().subscribe(res => {
-      this.minPrice = res.data.minMaxPrices[0];
-      this.maxPrice = res.data.minMaxPrices[1];
+      this.minPrice = res.data.minMaxPrices.minPrice;
+      this.maxPrice = res.data.minMaxPrices.maxPrice;
 
       this.toPrice = this.maxPrice;
       this.fromPrice = this.minPrice;

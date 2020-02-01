@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { EditCarDto } from './models/edit-car-dto';
 import { CarsFilter } from './models/cars-filter';
 import gql from 'graphql-tag';
-import { Apollo } from 'apollo-angular';
+import { Apollo, QueryRef } from 'apollo-angular';
 import { ApolloQueryResult } from 'apollo-client';
 
 const CARS_FIELDS = gql`
@@ -104,7 +104,19 @@ const CARS_COUNT = gql`
 
 const MIN_MAX_PRICES = gql`
   query MinMaxPrices {
-    minMaxPrices
+    minMaxPrices {
+      minPrice
+      maxPrice
+    }
+  }
+`;
+
+const MIN_MAX_PRICES_CHANGED = gql`
+  subscription MinMaxPricesChanged {
+    minMaxPricesChanged {
+      minPrice
+      maxPrice
+    }
   }
 `;
 
@@ -130,7 +142,13 @@ const UPDATE_CAR = gql`
   providedIn: 'root'
 })
 export class CarsService {
-  constructor(private apollo: Apollo) {}
+  minMaxPricesQuery: QueryRef<any>;
+
+  constructor(private apollo: Apollo) {
+    this.minMaxPricesQuery = this.apollo.watchQuery({ query: MIN_MAX_PRICES });
+
+    this.subscribeForNewMinMaxPrices();
+  }
 
   getCars(
     index: number,
@@ -157,8 +175,7 @@ export class CarsService {
   add(car: EditCarDto): Observable<any> {
     return this.apollo.mutate({
       mutation: ADD_CAR,
-      variables: { newCar: { ...car } },
-      refetchQueries: ['MinMaxPrices']
+      variables: { newCar: { ...car } }
     });
   }
 
@@ -186,6 +203,31 @@ export class CarsService {
   }
 
   getMinMaxPrices(): Observable<ApolloQueryResult<any>> {
-    return this.apollo.watchQuery({ query: MIN_MAX_PRICES }).valueChanges;
+    return this.minMaxPricesQuery.valueChanges;
+  }
+
+  subscribeForNewMinMaxPrices(): void {
+    this.minMaxPricesQuery.subscribeToMore({
+      document: MIN_MAX_PRICES_CHANGED,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData) {
+          return prev;
+        }
+
+        const oldPrices = prev['minMaxPrices'];
+        const newMinMaxPrices = subscriptionData.data.minMaxPricesChanged;
+
+        if (
+          oldPrices.minPrice === newMinMaxPrices.minPrice &&
+          oldPrices.maxPrice === newMinMaxPrices.maxPrice
+        ) {
+          return prev;
+        }
+
+        return Object.assign({}, prev, {
+          minMaxPrices: newMinMaxPrices
+        });
+      }
+    });
   }
 }
