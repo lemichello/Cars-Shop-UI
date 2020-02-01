@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { ApolloModule, APOLLO_OPTIONS } from 'apollo-angular';
 import { HttpLinkModule, HttpLink } from 'apollo-angular-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
+import { InMemoryCache, defaultDataIdFromObject } from 'apollo-cache-inmemory';
 import { WebSocketLink } from 'apollo-link-ws';
 import { environment } from '../../../../apps/shop/src/environments/environment';
 import { split } from 'apollo-link';
@@ -29,7 +29,17 @@ export function createApollo(httpLink: HttpLink) {
 
   return {
     link: link,
-    cache: new InMemoryCache()
+    cache: new InMemoryCache({
+      dataIdFromObject: object => {
+        switch (object.__typename) {
+          case 'MinMaxPrice':
+            //@ts-ignore
+            return `MinMaxPrice:${object.minPrice}${object.maxPrice}`;
+          default:
+            return defaultDataIdFromObject(object);
+        }
+      }
+    })
   };
 }
 
