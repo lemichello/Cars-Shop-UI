@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Vendor, VendorsService } from '@cars-shop-ui/core-data';
+import { DetailedVendor, VendorsService } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { Router } from '@angular/router';
 
@@ -10,31 +10,41 @@ import { Router } from '@angular/router';
 })
 export class VendorsComponent implements OnInit {
   colsNumber = 5;
+  currentIndex: number;
+  currentSize: number;
   paginationLength: number;
-  vendors: Vendor[];
+  vendors: DetailedVendor[];
+  paginatedVendors: DetailedVendor[];
 
-  constructor(private vendorsService: VendorsService, private router: Router) {}
+  constructor(private vendorsService: VendorsService, private router: Router) {
+    this.currentIndex = 0;
+    this.currentSize = this.colsNumber * 5;
+  }
 
   ngOnInit() {
-    this.vendorsService.getAll(0, this.colsNumber * 5).subscribe(res => {
+    this.vendorsService.getDetailed().subscribe(res => {
       this.vendors = res.data.vendors;
-      this.vendorsService.getCount().subscribe(count => {
-        this.paginationLength = count.data.vendorsCount;
-      });
+
+      const startIndex = this.currentIndex * this.currentSize;
+      const endIndex = startIndex + this.currentSize;
+
+      this.paginatedVendors = this.vendors.slice(startIndex, endIndex);
+      this.paginationLength = this.vendors.length;
     });
   }
 
   paginateVendors(paginationData: PaginationOutput): void {
     this.colsNumber = paginationData.colsNumber;
+    this.currentIndex = paginationData.pageIndex;
+    this.currentSize = paginationData.pageSize;
 
-    this.vendorsService
-      .getAll(paginationData.pageIndex, paginationData.pageSize)
-      .subscribe(res => {
-        this.vendors = res.data.vendors;
-      });
+    const startIndex = this.currentIndex * this.currentSize;
+    const endIndex = startIndex + this.currentSize;
+
+    this.paginatedVendors = this.vendors.slice(startIndex, endIndex);
   }
 
-  navigateToModel(vendorId: number): void {
-    this.router.navigate(['catalog/models', vendorId]);
+  async navigateToModel(vendorId: number): Promise<void> {
+    await this.router.navigate(['catalog/models', vendorId]);
   }
 }
