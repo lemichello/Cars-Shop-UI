@@ -4,19 +4,17 @@ import {
   CarsService,
   Color,
   ColorsService,
+  DetailedVendor,
   EngineVolume,
   EngineVolumesService,
   Model,
   ModelsService,
-  Vendor,
   VendorsService
 } from '@cars-shop-ui/core-data';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatSnackBar } from '@angular/material';
 import { InputDialogComponent } from './input-dialog/input-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map} from 'rxjs/operators';
 
 @Component({
   selector: 'cars-shop-ui-car-edit',
@@ -27,10 +25,10 @@ export class CarEditComponent implements OnInit {
   carId?: number;
   car?: Car;
 
-  vendors: Observable<Vendor[]>;
-  models: Observable<Model[]>;
-  colors: Observable<Color[]>;
-  engineVolumes: Observable<EngineVolume[]>;
+  vendors: DetailedVendor[];
+  models: Model[];
+  colors: Color[];
+  engineVolumes: EngineVolume[];
   carFormGroup: FormGroup;
 
   selectedVendorId: number;
@@ -65,94 +63,91 @@ export class CarEditComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.initializeCollections();
+  async ngOnInit() {
+    await this.initializeCollections();
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe(async params => {
       if (params['carId'] && params['carId'] !== 'new') {
         this.carId = +params['carId'];
-        this.initializeCar();
+        await this.initializeCar();
+      } else {
+        this.carId = undefined;
+        this.carFormGroup.controls['vendors'].setValue('');
+        this.carFormGroup.controls['models'].setValue('');
+        this.carFormGroup.controls['engineVolumes'].setValue('');
+        this.carFormGroup.controls['colors'].setValue('');
+        this.description = '';
+        this.price = undefined;
       }
     });
   }
 
-  initializeCar(): void {
-    this.carsService.getCarForEdit(this.carId).subscribe(res => {
+  async initializeCollections(): Promise<void> {
+    await this.refreshVendors();
+    await this.refreshColors();
+    await this.refreshEngineVolumes();
+  }
+
+  async initializeCar(): Promise<void> {
+    await this.carsService.getCarForEdit(this.carId).subscribe(async res => {
       this.car = res.data.car;
-      this.selectFieldsOfCar();
+      await this.selectFieldsOfCar();
     });
   }
 
-  selectFieldsOfCar(): void {
-    this.vendors.subscribe(vendors => {
-      this.carFormGroup.controls['vendors'].setValue(
-        vendors.find(x => x.id === this.car.model.vendorId).id
-      );
-      this.selectedVendorId = this.car.model.vendorId;
-      this.vendorSelected();
+  async selectFieldsOfCar(): Promise<void> {
+    this.carFormGroup.controls['vendors'].setValue(
+      this.vendors.find(x => x.id === this.car.model.vendorId).id
+    );
+    this.selectedVendorId = this.car.model.vendorId;
+    await this.vendorSelected();
+    this.carFormGroup.controls['models'].setValue(
+      this.models.find(x => x.id === this.car.model.id).id
+    );
+    this.selectedModelId = this.car.model.id;
 
-      this.models.subscribe(models => {
-        this.carFormGroup.controls['models'].setValue(
-          models.find(x => x.id === this.car.model.id).id
-        );
-        this.selectedModelId = this.car.model.id;
-      });
-    });
+    this.carFormGroup.controls['engineVolumes'].setValue(
+      this.engineVolumes.find(x => x.id === this.car.engineVolume.id).id
+    );
+    this.selectedEngineVolumeId = this.car.engineVolume.id;
 
-    this.engineVolumes.subscribe(res => {
-      this.carFormGroup.controls['engineVolumes'].setValue(
-        res.find(x => x.id === this.car.engineVolume.id).id
-      );
-      this.selectedEngineVolumeId = this.car.engineVolume.id;
-    });
-
-    this.colors.subscribe(res => {
-      this.carFormGroup.controls['colors'].setValue(
-        res.find(x => x.id === this.car.color.id).id
-      );
-      this.selectedColorId = this.car.color.id;
-    });
+    this.carFormGroup.controls['colors'].setValue(
+      this.colors.find(x => x.id === this.car.color.id).id
+    );
+    this.selectedColorId = this.car.color.id;
 
     this.description = this.car.description;
     this.price = this.car.price;
   }
 
-  refreshVendors(): void {
-    this.vendors = this.vendorsService
-      .getAll(undefined, undefined)
-      .pipe(map(({ data }) => data.vendors));
+  async refreshVendors(): Promise<void> {
+    await this.vendorsService
+      .getDetailed()
+      .subscribe(x => (this.vendors = x.data.vendors));
   }
 
-  refreshColors(): void {
-    this.colors = this.colorsService
+  async refreshColors(): Promise<void> {
+    await this.colorsService
       .getAll()
-      .pipe(map(({ data }) => data.colors));
+      .subscribe(x => (this.colors = x.data.colors));
   }
 
-  refreshEngineVolumes(): void {
-    this.engineVolumes = this.engineVolumesService
+  async refreshEngineVolumes(): Promise<void> {
+    await this.engineVolumesService
       .getAll()
-      .pipe(map(({ data }) => data.engineVolumes));
+      .subscribe(x => (this.engineVolumes = x.data.engineVolumes));
   }
 
-  refreshModels(vendorId: number): void {
-    this.models = this.modelsService
-      .getByVendor(vendorId, undefined, undefined)
-      .pipe(map(({ data }) => data.models));
-  }
-
-  initializeCollections(): void {
-    this.refreshVendors();
-    this.refreshColors();
-    this.refreshEngineVolumes();
+  async refreshModels(vendorId: number): Promise<void> {
+    this.models = this.vendors.find(v => v.id === vendorId).models;
   }
 
   private openSnackBar(message: string, action: string): void {
     this.snackBar.open(message, action, { duration: 3000 });
   }
 
-  vendorSelected(): void {
-    this.refreshModels(
+  async vendorSelected(): Promise<void> {
+    await this.refreshModels(
       this.selectedVendorId ? this.selectedVendorId : this.car.model.vendorId
     );
   }
@@ -163,18 +158,18 @@ export class CarEditComponent implements OnInit {
       data: { target: subject, unit: unit }
     });
 
-    dialogRef.afterClosed().subscribe(res => {
-      callback(res);
+    dialogRef.afterClosed().subscribe(async res => {
+      await callback(res);
     });
   }
 
-  addVendor(vendorName: string): void {
+  async addVendor(vendorName: string): Promise<void> {
     if (!vendorName) {
       return;
     }
 
-    this.vendorsService.add(vendorName).subscribe(() => {
-      this.refreshVendors();
+    await this.vendorsService.add(vendorName).subscribe(async () => {
+      await this.refreshVendors();
     });
   }
 
@@ -200,22 +195,22 @@ export class CarEditComponent implements OnInit {
         name: modelName,
         vendorId: this.selectedVendorId
       })
-      .subscribe(() => {
-        this.refreshModels(this.selectedVendorId);
+      .subscribe(async () => {
+        await this.refreshModels(this.selectedVendorId);
       });
   }
 
-  addColor(colorName: string): void {
+  async addColor(colorName: string): Promise<void> {
     if (!colorName) {
       return;
     }
 
-    this.colorsService.add(colorName).subscribe(() => {
-      this.refreshColors();
+    await this.colorsService.add(colorName).subscribe(async () => {
+      await this.refreshColors();
     });
   }
 
-  addEngineVolume(engineVolume: string): void {
+  async addEngineVolume(engineVolume: string): Promise<void> {
     if (engineVolume === undefined) {
       return;
     }
@@ -227,9 +222,11 @@ export class CarEditComponent implements OnInit {
       return;
     }
 
-    this.engineVolumesService.add(engineVolumeValue).subscribe(() => {
-      this.refreshEngineVolumes();
-    });
+    await this.engineVolumesService
+      .add(engineVolumeValue)
+      .subscribe(async () => {
+        await this.refreshEngineVolumes();
+      });
   }
 
   saveCar(): void {
@@ -250,9 +247,9 @@ export class CarEditComponent implements OnInit {
         price: this.price,
         id: 0
       })
-      .subscribe(() => {
+      .subscribe(async () => {
         this.openSnackBar('Successfully added', 'OK');
-        this.router.navigate(['catalog/cars']);
+        await this.router.navigate(['catalog/cars']);
       });
   }
 
@@ -266,17 +263,17 @@ export class CarEditComponent implements OnInit {
         description: this.description,
         price: this.price
       })
-      .subscribe(() => {
+      .subscribe(async () => {
         this.openSnackBar('Successfully updated', 'OK');
-        this.router.navigate(['catalog/car', this.car.id]);
+        await this.router.navigate(['catalog/car', this.car.id]);
       });
   }
 
-  cancelEdit() {
+  async cancelEdit() {
     if (this.carId) {
-      this.router.navigate(['catalog/car', this.carId]);
+      await this.router.navigate(['catalog/car', this.carId]);
     } else {
-      this.router.navigate(['catalog/cars']);
+      await this.router.navigate(['catalog/cars']);
     }
   }
 }

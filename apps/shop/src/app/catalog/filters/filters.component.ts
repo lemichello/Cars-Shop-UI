@@ -270,7 +270,7 @@ export class FiltersComponent implements OnInit {
         ? this.engineVolumesFormControl.value.id
         : null,
       modelsId: this.treeControl.dataNodes
-        .filter(x => this.checkListSelection.isSelected(x))
+        .filter(x => this.checkListSelection.isSelected(x) && !x.expandable)
         .map(x => x.data.id),
       price: {
         fromPrice: this.fromPrice,

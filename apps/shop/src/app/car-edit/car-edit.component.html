@@ -19,10 +19,7 @@
               (selectionChange)="vendorSelected()"
               required
             >
-              <mat-option
-                *ngFor="let vendor of vendors | async"
-                [value]="vendor.id"
-              >
+              <mat-option *ngFor="let vendor of vendors" [value]="vendor.id">
                 {{ vendor.name }}
               </mat-option>
             </mat-select>
@@ -43,10 +40,7 @@
               [(value)]="selectedModelId"
               required
             >
-              <mat-option
-                *ngFor="let model of models | async"
-                [value]="model.id"
-              >
+              <mat-option *ngFor="let model of models" [value]="model.id">
                 {{ model.name }}
               </mat-option>
             </mat-select>
@@ -67,10 +61,7 @@
               [(value)]="selectedColorId"
               required
             >
-              <mat-option
-                *ngFor="let color of colors | async"
-                [value]="color.id"
-              >
+              <mat-option *ngFor="let color of colors" [value]="color.id">
                 {{ color.name }}
               </mat-option>
             </mat-select>
@@ -92,7 +83,7 @@
               required
             >
               <mat-option
-                *ngFor="let engineVolume of engineVolumes | async"
+                *ngFor="let engineVolume of engineVolumes"
                 [value]="engineVolume.id"
               >
                 {{ engineVolume.volume }}
@@ -109,25 +100,29 @@
         </p>
         <p>
           <mat-form-field>
-            <textarea
-              matInput
-              placeholder="Description"
-              formControlName="description"
-              [(ngModel)]="description"
-            ></textarea>
+            <label>
+              <textarea
+                matInput
+                placeholder="Description"
+                formControlName="description"
+                [(ngModel)]="description"
+              ></textarea>
+            </label>
           </mat-form-field>
         </p>
         <p>
           <mat-form-field class="price-input-field">
-            <input
-              matInput
-              placeholder="Price"
-              type="number"
-              min="1"
-              formControlName="price"
-              [(ngModel)]="price"
-              required
-            />
+            <label>
+              <input
+                matInput
+                placeholder="Price"
+                type="number"
+                min="1"
+                formControlName="price"
+                [(ngModel)]="price"
+                required
+              />
+            </label>
             <mat-icon matPrefix>
               attach_money
             </mat-icon>
