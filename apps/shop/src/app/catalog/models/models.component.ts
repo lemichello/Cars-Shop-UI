@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Model, ModelsService } from '@cars-shop-ui/core-data';
+import { Model, ModelsService, VendorsService } from '@cars-shop-ui/core-data';
 import { PaginationOutput } from '../paginator/pagination-output';
 import { ActivatedRoute } from '@angular/router';
 
@@ -11,40 +11,47 @@ import { ActivatedRoute } from '@angular/router';
 export class ModelsComponent implements OnInit {
   vendorId: number;
   colsNumber = 3;
+  currentIndex: number;
+  currentSize: number;
   paginationLength: number;
   models: Model[];
+  paginatedModels: Model[];
 
   constructor(
     private modelsService: ModelsService,
+    private vendorsService: VendorsService,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.currentIndex = 0;
+    this.currentSize = this.colsNumber * 5;
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.vendorId = +params['vendorId'];
     });
 
-    this.modelsService
-      .getByVendor(this.vendorId, 0, this.colsNumber * 5)
-      .subscribe(res => {
-        this.models = res.data.models;
-        this.modelsService.getCount(this.vendorId).subscribe(count => {
-          this.paginationLength = count.data.modelsCount;
-        });
-      });
+    this.vendorsService.getDetailed().subscribe(res => {
+      this.models = res.data.vendors.find(
+        vendor => vendor.id === this.vendorId
+      ).models;
+
+      const startIndex = this.currentIndex * this.currentSize;
+      const endIndex = startIndex + this.currentSize;
+
+      this.paginatedModels = this.models.slice(startIndex, endIndex);
+      this.paginationLength = this.models.length;
+    });
   }
 
   paginateModels(paginationData: PaginationOutput): void {
     this.colsNumber = paginationData.colsNumber;
+    this.currentIndex = paginationData.pageIndex;
+    this.currentSize = paginationData.pageSize;
 
-    this.modelsService
-      .getByVendor(
-        this.vendorId,
-        paginationData.pageIndex,
-        paginationData.pageSize
-      )
-      .subscribe(res => {
-        this.models = res.data.models;
-      });
+    const startIndex = this.currentIndex * this.currentSize;
+    const endIndex = startIndex + this.currentSize;
+
+    this.paginatedModels = this.models.slice(startIndex, endIndex);
   }
 }
