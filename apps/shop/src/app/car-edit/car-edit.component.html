@@ -23,6 +23,7 @@
                 {{ vendor.name }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="carFormGroup.controls['vendors'].invalid">This field is required</mat-error>
           </mat-form-field>
           <button
             mat-mini-fab
@@ -44,6 +45,7 @@
                 {{ model.name }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="carFormGroup.controls['models'].invalid">This field is required</mat-error>
           </mat-form-field>
           <button
             mat-mini-fab
@@ -65,6 +67,7 @@
                 {{ color.name }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="carFormGroup.controls['colors'].invalid">This field is required</mat-error>
           </mat-form-field>
           <button
             mat-mini-fab
@@ -89,6 +92,7 @@
                 {{ engineVolume.volume }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="carFormGroup.controls['engineVolumes'].invalid">This field is required</mat-error>
           </mat-form-field>
           <button
             mat-mini-fab
@@ -126,6 +130,7 @@
             <mat-icon matPrefix>
               attach_money
             </mat-icon>
+            <mat-error *ngIf="carFormGroup.controls['price'].invalid">This field is required</mat-error>
           </mat-form-field>
         </p>
       </div>
