@@ -5,7 +5,7 @@ import { CarEditComponent } from './car-edit/car-edit.component';
 const routes: Routes = [
   {
     path: 'catalog',
-    loadChildren: './catalog/catalog.module#CatalogModule'
+    loadChildren: () => import('./catalog/catalog.module').then(m => m.CatalogModule)
   },
   { path: 'car/:carId', component: CarEditComponent },
   { path: '**', redirectTo: 'catalog/cars', pathMatch: 'full' }

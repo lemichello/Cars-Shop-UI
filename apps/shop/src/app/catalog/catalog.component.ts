@@ -10,7 +10,7 @@ import { CarsComponent } from './cars/cars.component';
   styleUrls: ['./catalog.component.scss']
 })
 export class CatalogComponent implements OnInit {
-  @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
+  @ViewChild('sidenav') sidenav: MatSidenav;
   carsComponent: CarsComponent;
 
   constructor(public router: Router) {

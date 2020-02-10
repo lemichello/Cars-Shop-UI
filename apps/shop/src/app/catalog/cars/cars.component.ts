@@ -23,7 +23,7 @@ const DEFAULT_FILTER: CarsFilter = {
   styleUrls: ['./cars.component.scss']
 })
 export class CarsComponent implements OnInit {
-  @ViewChild(PaginatorComponent, { static: false })
+  @ViewChild(PaginatorComponent)
   paginatorComponent: PaginatorComponent;
 
   colsNumber = 3;

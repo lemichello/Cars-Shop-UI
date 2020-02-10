@@ -18,7 +18,7 @@ export class PaginatorComponent implements OnInit {
   @Input() paginationLength: number;
   @Input() colsNumber: number;
   @Output() paginated = new EventEmitter();
-  @ViewChild('paginator', { static: false }) paginator: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator;
   pageSize: number;
   pageSizeOptions: number[];
   pageIndex = 0;
