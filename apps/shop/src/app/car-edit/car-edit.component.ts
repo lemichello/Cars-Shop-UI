@@ -12,7 +12,8 @@ import {
   VendorsService
 } from '@cars-shop-ui/core-data';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InputDialogComponent } from './input-dialog/input-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
 

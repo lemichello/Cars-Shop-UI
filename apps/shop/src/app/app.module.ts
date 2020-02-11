@@ -10,7 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { CoreDataModule } from '@cars-shop-ui/core-data';
 import { CarEditComponent } from './car-edit/car-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material';
 import { InputDialogComponent } from './car-edit/input-dialog/input-dialog.component';
 import { ApolloModule } from 'apollo-angular';
 
@@ -26,7 +25,6 @@ import { ApolloModule } from 'apollo-angular';
     CoreDataModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    MatDialogModule,
     ApolloModule
   ],
   providers: [],

@@ -1,9 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import {
-  MatSnackBar,
-  MatTreeFlatDataSource,
-  MatTreeFlattener
-} from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { ModelNode } from './model-node';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { ModelFlatNode } from './model-flat-node';

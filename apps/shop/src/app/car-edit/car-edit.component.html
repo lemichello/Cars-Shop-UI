@@ -104,14 +104,17 @@
         </p>
         <p>
           <mat-form-field>
-            <label>
+            <!--<label>
               <textarea
                 matInput
                 placeholder="Description"
                 formControlName="description"
                 [(ngModel)]="description"
               ></textarea>
-            </label>
+            </label>-->
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" [(ngModel)]="description">
+            </textarea>
           </mat-form-field>
         </p>
         <p>
