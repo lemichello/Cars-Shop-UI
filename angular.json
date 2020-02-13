@@ -201,7 +201,7 @@
       "unitTestRunner": "jest"
     },
     "@schematics/angular:component": {
-      "styleext": "scss"
+      "style": "scss"
     }
   },
   "defaultProject": "shop"
