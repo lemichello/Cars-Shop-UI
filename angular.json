@@ -91,7 +91,8 @@
           "options": {
             "jestConfig": "apps/shop/jest.config.js",
             "tsConfig": "apps/shop/tsconfig.spec.json",
-            "setupFile": "apps/shop/src/test-setup.ts"
+            "setupFile": "apps/shop/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -144,7 +145,8 @@
           "options": {
             "jestConfig": "libs/material/jest.config.js",
             "tsConfig": "libs/material/tsconfig.spec.json",
-            "setupFile": "libs/material/src/test-setup.ts"
+            "setupFile": "libs/material/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -175,7 +177,8 @@
           "options": {
             "jestConfig": "libs/core-data/jest.config.js",
             "tsConfig": "libs/core-data/tsconfig.spec.json",
-            "setupFile": "libs/core-data/src/test-setup.ts"
+            "setupFile": "libs/core-data/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
