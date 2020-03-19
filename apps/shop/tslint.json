@@ -13,5 +13,10 @@
       "cars-shop-ui",
       "kebab-case"
     ]
+  },
+  "linterOptions": {
+    "exclude": [
+      "!**/*"
+    ]
   }
 }
